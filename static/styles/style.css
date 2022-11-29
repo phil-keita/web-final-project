@@ -1,0 +1,115 @@
+:root {
+    /* --main-color: #2f2fA2;
+    --accent-color: #f64c72;
+    --darker-accent-color: #8e2b40;
+    --darker-main-color: #242582; */
+
+    --main-color: #12332d;
+    --darker-main-color: #0b241f;
+    --accent-color: #1bab98;
+    --darker-accent-color: #007e6e;
+    
+  }
+
+#main-container {
+    /* color: white; */
+    /* background-image: url("/static/styles/images/background-image.jpg"); */
+    /* background: linear-gradient(45deg, var(--main-color), var(--darker-main-color)); */
+    /* background-color: var(--darker-main-color); */
+}
+
+#form-container {
+    /* background: var(--main-color); */
+    height: 100vh;
+    /* color: white; */
+}
+
+#menu-bar {
+    background-color: var(--accent-color);
+    /* color: white; */
+}
+
+.nav-link, .navbar-brand {
+    color: white;
+}
+.nav-link:hover, .navbar-brand:hover{
+    color: var(--main-color);
+}
+
+#card {
+    /* background-color: var(--darker-main-color);
+    color: white; */
+}
+
+#button {
+    color: white;
+    /* background: linear-gradient(45deg, var(--darker-accent-color), var(--accent-color)); */
+    background-color: var(--accent-color);
+}
+
+#button:hover{
+    border-color: var(--accent-color);
+}
+
+#input {
+    color: white;
+    border-color: var(--accent-color);
+    /* background-color: var(--darker-main-color); */
+    transition: .5s background-color;
+}
+
+#input:focus {
+    border-color: var(--accent-color);
+    /* background-color: var(--main-color); */
+}
+
+#input:hover {
+    border-color: var(--accent-color);
+    /* background-color: var(--main-color); */
+    transition-delay: .1s;
+}
+
+#search {
+    border-color: var(--accent-color);
+}
+
+#search-button {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: white;
+}
+
+#profile-pic{
+    width: 40px;
+    border-radius: 50%;
+}
+
+#post{
+    width: 50rem;
+    /* background-color: var(--main-color); */
+    /* color: white; */
+    border-color: var(--accent-color);
+    padding-left: 0%;
+    padding-right: 0%;
+}
+#post-content {
+    border-bottom: 1px solid var(--accent-color);
+}
+
+#carousel {
+    width: 50rem;
+    height: 25rem;
+    object-fit: cover;
+}
+
+.time {
+    color: var(--main-color);
+    font-weight: 100;
+}
+
+.username{
+    color: black;
+}
+.username:hover{
+    color: var(--accent-color);
+}
