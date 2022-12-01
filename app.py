@@ -65,7 +65,7 @@ def post_login(): #TODO: LOGIN PAGE (SAVES PREVIOUS VISITED ADDRESS WITH session
         temp_username = form.username.data
         temp_password = form.password.data
         db_user = User.query.filter_by(username=temp_username).first()
-        if (db_user) and (db_user.password == temp_password):
+        if (db_user.username == temp_username) and (db_user.password == temp_password):
             #TODO: Finalize login stage
             login_user(db_user)
             return redirect(url_for('index'))
