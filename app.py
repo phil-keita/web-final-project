@@ -171,6 +171,8 @@ def profile_posts(userid):
     pass
 
 @app.route("/profile/<int:userid>/comments/") #TODO: VIEWING ALL COMMENTS OF THE USER
+def profile_comments(userid):
+    pass
 
 @app.route("/explore/")
 @app.route("/explore/<int:postid>/")
