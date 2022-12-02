@@ -1,10 +1,10 @@
 import email
 from click import password_option
-from flask import Flask, render_template, url_for, redirect, flash, session
+from flask import Flask, jsonify, render_template, url_for, redirect, flash, session
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 from flask_login import login_required, login_user, LoginManager, logout_user, UserMixin
 import os
-
 
 from userform import Login_form, Register_Form, Post_Form, Comment_Form
 
@@ -161,7 +161,16 @@ def post_required():
 
 @app.route("/profile/<int:userid>/")
 def profile_view(userid):  #TODO: VIEWING A PERSON'S PROFILE PAGE WITH ALL OF THEIR RECIPE POSTS
+    profile_user = User.query.filter_by(id=userid).first()
+    post_info = Post.query.filter_by(user_id=userid).order_by(desc(Post.id)).all()
+    comment_info = Comment.query.filter_by(user_id=userid).order_by(desc(Comment.id)).all()
+    return render_template("profile.html", user=profile_user, posts=post_info, comments=comment_info)
+
+@app.route("/profile/<int:userid>/posts/")  #TODO: VIEWING ALL POSTS OF THE USER
+def profile_posts(userid):
     pass
+
+@app.route("/profile/<int:userid>/comments/") #TODO: VIEWING ALL COMMENTS OF THE USER
 
 @app.route("/explore/")
 @app.route("/explore/<int:postid>/")

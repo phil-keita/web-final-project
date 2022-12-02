@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/scripts/profile_details.js"></script>
+    <title>{{user.username}}'s Profile</title>
+</head>
+<body>
+    <div>
+        <h1>
+            {{user.username}}    
+        </h1>
+    </div>
+    <hr>
+    Recent Posts:
+    <div id="post-div">
+        {% if posts %}
+            {% for i in range(4) %}
+                {% if posts[i] %}
+                <p>{{posts[i].post_name}}</p>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>No posts have been made by this user.</p>
+        {% endif %}
+    </div>
+    <hr>
+    Recent Comments:
+    <div id="comment-div">
+        {% if posts %}
+            {% for i in range(4) %}
+                {% if comments[i] %}
+                <p>{{comments[i].comment_name}}</p>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>No comments have been made by this user.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
