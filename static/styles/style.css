@@ -8,8 +8,8 @@
     --darker-main-color: #0b241f;
     --accent-color: #1bab98;
     --darker-accent-color: #007e6e;
-    
-  }
+
+}
 
 #main-container {
     /* color: white; */
@@ -29,10 +29,13 @@
     /* color: white; */
 }
 
-.nav-link, .navbar-brand {
+.nav-link,
+.navbar-brand {
     color: white;
 }
-.nav-link:hover, .navbar-brand:hover{
+
+.nav-link:hover,
+.navbar-brand:hover {
     color: var(--main-color);
 }
 
@@ -47,12 +50,12 @@
     background-color: var(--accent-color);
 }
 
-#button:hover{
+#button:hover {
     border-color: var(--accent-color);
 }
 
 #input {
-    color: white;
+    /*color: white;*/
     border-color: var(--accent-color);
     /* background-color: var(--darker-main-color); */
     transition: .5s background-color;
@@ -79,12 +82,12 @@
     color: white;
 }
 
-#profile-pic{
+#profile-pic {
     width: 40px;
     border-radius: 50%;
 }
 
-#post{
+#post {
     width: 50rem;
     /* background-color: var(--main-color); */
     /* color: white; */
@@ -92,6 +95,7 @@
     padding-left: 0%;
     padding-right: 0%;
 }
+
 #post-content {
     border-bottom: 1px solid var(--accent-color);
 }
@@ -107,9 +111,10 @@
     font-weight: 100;
 }
 
-.username{
+.username {
     color: black;
 }
-.username:hover{
+
+.username:hover {
     color: var(--accent-color);
 }

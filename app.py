@@ -6,7 +6,7 @@ from sqlalchemy import desc
 from flask_login import login_required, login_user, LoginManager, logout_user, UserMixin
 import os
 
-from userform import Login_form, Register_Form, Post_Form, Comment_Form
+from userform import Login_form, Register_Form, Post_Form, Comment_Form, PrePostForm
 
 app = Flask(__name__)
 script_dir = os.path.abspath(os.path.dirname(__file__))
@@ -44,7 +44,6 @@ class Comment(db.Model):
     user_id = db.Column(db.Unicode, db.ForeignKey('Users.id'))
     text = db.Column(db.Unicode, nullable=False)
     rating = db.Column(db.Unicode, nullable=False)
-    
 with app.app_context():
     db.drop_all()
     db.create_all()
@@ -109,12 +108,40 @@ def post_register(): #TODO: REGISTER PAGE
     db.session.commit()
 
     return redirect(url_for('index'))
-   
+
+@app.get("/ingredients/")
+@login_required
+def get_pre_post():
+    form = PrePostForm()
+    return render_template("prepost.html", form=form)
+
+
+@app.post("/ingredients/")
+@login_required
+def post_pre_post():
+    form = PrePostForm()
+    if not form.validate():
+        for field,error in form.errors.items():
+            flash(f"{field} - {error}")
+        return redirect(url_for("get_pre_post"))
+    
+    ingredients = form.num_ingredients.data
+    units = form.units.data
+    print(units)
+    session['num_ingredients'] = ingredients
+    session['units'] = units
+
+    return redirect(url_for("get_post"))
+
+
 @app.get("/post/")
 @login_required
 def get_post():
     form = Post_Form()
-    return render_template("post.html", form=form)
+    num = session['num_ingredients']
+    units = session['units']
+
+    return render_template("post.html", form=form, num=num, units=units)
     
 @app.post("/post/")
 @login_required

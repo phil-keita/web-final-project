@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-wwarning alert-dismissible fade show" role="alert">
+            {{message}}
+        </div>
+        {% endfor %}
+    </div>
+
+    <form action="/ingredients/" method="post">
+        {{ form.hidden_tag() }}
+        <h3>How many ingredients will we be using for this recipe?</h3>
+        {{ form.num_ingredients.label }}
+        {{ form.num_ingredients }}
+        {{ form.units.label }}
+        {{ form.units }}
+        {{ form.submit }}
+
+</body>
+
+</html>

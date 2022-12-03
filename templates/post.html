@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post</title>
 </head>
+
 <body>
     <div class="container">
         {% for message in get_flashed_messages() %}
@@ -19,9 +21,25 @@
         {{ form.hidden_tag() }}
         {{ form.post_name.label }}
         {{ form.post_name }}
+        {% if units == "Imperial" %}
+        <h3>ingredients</h3>
+        {% for i in range(0, num) %}
+        {{ form.ingredients }}
+        {{ form.im_units }}
+        {% endfor %}
+        {% endif %}
+        {% if units == "Metric" %}
+        <h3>ingredients</h3>
+        {% for i in range(0, num) %}
+        {{ form.ingredients }}
+        {{ form.m_units.label }}
+        {{ form.m_units}}
+        {% endfor %}
+        {% endif %}
         {{ form.recipe.label }}
         {{ form.recipe }}
         {{ form.submit }}
     </form>
 </body>
+
 </html>
