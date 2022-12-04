@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <script src="/scripts/profile_details.js"></script> -->
+    <script id="getscript" posts="{{posts}}" comments="{{comments}}"></script>
+    <script type="text/javascript" src="/templates/scripts/profile_details.js"></script>
+    <!-- WHY IS THIS GIVING 404s??? -->
     <title>{{user.username}}'s Profile</title>
 </head>
 <body>
@@ -16,28 +18,12 @@
     <hr>
     Recent Posts:
     <div id="post-div">
-        {% if posts %}
-            {% for i in range(4) %}
-                {% if posts[i] %}
-                <p>{{posts[i].post_name}}</p>
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            <p>No posts have been made by this user.</p>
-        {% endif %}
+        
     </div>
     <hr>
     Recent Comments:
     <div id="comment-div">
-        {% if posts %}
-            {% for i in range(4) %}
-                {% if comments[i] %}
-                <p>{{comments[i].comment_name}}</p>
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            <p>No comments have been made by this user.</p>
-        {% endif %}
+        
     </div>
 </body>
 </html>
