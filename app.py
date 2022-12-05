@@ -3,7 +3,7 @@ from click import password_option
 from flask import Flask, jsonify, render_template, url_for, redirect, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
-from flask_login import login_required, login_user, LoginManager, logout_user, UserMixin
+from flask_login import login_required, login_user, LoginManager, logout_user, UserMixin, current_user
 import os
 
 from userform import Login_form, Register_Form, Post_Form, Comment_Form, PrePostForm
@@ -64,9 +64,10 @@ def post_login(): #TODO: LOGIN PAGE (SAVES PREVIOUS VISITED ADDRESS WITH session
         temp_username = form.username.data
         temp_password = form.password.data
         db_user = User.query.filter_by(username=temp_username).first()
-        if (db_user.username == temp_username) and (db_user.password == temp_password):
+        if bool(db_user) and (db_user.username == temp_username) and (db_user.password == temp_password):
             #TODO: Finalize login stage
             login_user(db_user)
+            session["userid"] = db_user.id 
             return redirect(url_for('index'))
         else:
             flash("Username or password was not correct")
@@ -186,6 +187,12 @@ def post_required():
     db.session.add(new_comment)
     db.session.commit()
 
+@app.route("/profile/")
+@login_required
+def user_profile():
+    usernum = session.get("userid")
+    return redirect(f"/profile/{usernum}")
+
 @app.route("/profile/<int:userid>/")
 def profile_view(userid):  #TODO: VIEWING A PERSON'S PROFILE PAGE WITH ALL OF THEIR RECIPE POSTS
     profile_user = User.query.filter_by(id=userid).first()
@@ -218,6 +225,7 @@ def explore_page(postid=0):
 @app.route("/logout/")
 @login_required
 def logout_page():
+    session["userid"] = None
     logout_user()
     flash("You have been logged out.")
     return redirect(url_for("get_login"))
