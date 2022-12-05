@@ -28,7 +28,7 @@ class IngrediantForm(Form):
 
 class Post_Form(FlaskForm):
     post_name = StringField("Title ", validators=[InputRequired()])
-    ingredients = FieldList(FormField(IngrediantForm), min_entries=1)
+    ingredients = FieldList(FormField(IngrediantForm, label=None), min_entries=1)
     recipe = StringField("Enter Recipe Here ", validators=[InputRequired()])
     im_units = SelectField('Units:', choices=('tsp', 'tbsp', 'floz', 'cup', 'gal', 'oz', 'lb'), validators=[Optional()])
     m_units = SelectField('Units:', choices=('ml', 'l', 'mg', 'g', 'kg'), validators=[Optional()])

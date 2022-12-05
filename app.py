@@ -138,10 +138,12 @@ def post_pre_post():
 @app.get("/post/")
 @login_required
 def get_post():
+    pre_form = PrePostForm()
     form = Post_Form()
     num = session['num_ingredients']
     units = session['units']
-
+    if (pre_form.is_submitted() == False):
+        return redirect(url_for("get_pre_post"))
     return render_template("post.html", form=form, num=num, units=units)
     
 @app.post("/post/")
