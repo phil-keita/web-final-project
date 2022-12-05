@@ -4,23 +4,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function loadPostPreview() {
-    const posts = document.getElementById("getscript").getAttribute("posts");
+    const postDir = "" //GOES TO "/profile/<int:userid>/jsondump/"
     const postDiv = document.getElementById("post-div");
 
-    for (let i=0; i<4; i++) {
-        if (posts[i] !== null) {
+    fetch(postDir)
+        .then(posts => {
+            for (let i=0; i<4; i++) {
+                if (posts[i] !== null) {
+                    const hr = document.createElement("hr");
+                    const title = document.createElement("h2");
+                    title.innerText = `${posts[i].post_name}`;
+                
+                    const preview = document.createElement("p");
+                    const text = `${posts[i].recipe}`.substring(0,50) + "...";
+                    preview.innerText = text;
+                    postDiv.append(hr, title, preview);
+                }
+            }
             const hr = document.createElement("hr");
-            const title = document.createElement("h2");
-            title.innerText = `${posts[i].post_name}`;
-        
-            const preview = document.createElement("p");
-            const text = `${posts[i].recipe}`.substring(1,50) + "...";
-            preview.innerText = text;
-            postDiv.append(hr, title, preview);
-        }
-    }
-    const hr = document.createElement("hr");
-    postDiv.appendChild("hr");
+            postDiv.appendChild("hr");
+        })
+        .catch(error => {console.log(`Error occurred: ${error}`)})
 }
 
 async function loadCommentPreview() {

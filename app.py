@@ -142,8 +142,8 @@ def get_post():
     form = Post_Form()
     num = session['num_ingredients']
     units = session['units']
-    if (pre_form.is_submitted() == False):
-        return redirect(url_for("get_pre_post"))
+    # if (pre_form.is_submitted() == False):
+        # return redirect(url_for("get_pre_post"))
     return render_template("post.html", form=form, num=num, units=units)
     
 @app.post("/post/")
@@ -213,6 +213,15 @@ def profile_comments(userid):
     profile_user = User.query.filter_by(id=userid).first()
     comment_info = Comment.query.filter_by(user_id=userid).order_by(desc(Comment.id)).all()
     return render_template("profile.html", user=profile_user, comments=comment_info)
+
+@app.route("/profile/<int:userid>/jsondump/") #TODO: JSON FOR AJAX
+def user_json_dump(userid):
+    post_info = Post.query.filter_by(user_id=userid).order_by(desc(Post.id)).all()
+    comment_info = Comment.query.filter_by(user_id=userid).order_by(desc(Comment.id)).all()
+    return {
+        "posts":jsonify(post_info),
+        "comments":jsonify(comment_info)
+    }
 
 @app.route("/explore/")
 @app.route("/explore/<int:postid>/")
