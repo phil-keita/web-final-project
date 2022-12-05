@@ -217,10 +217,29 @@ def profile_comments(userid):
 @app.route("/profile/<int:userid>/jsondump/") #TODO: JSON FOR AJAX
 def user_json_dump(userid):
     post_info = Post.query.filter_by(user_id=userid).order_by(desc(Post.id)).all()
+    postArray = []
     comment_info = Comment.query.filter_by(user_id=userid).order_by(desc(Comment.id)).all()
+    commentArray = []
+    for i in post_info:
+        postArray.append({
+            "id": i.id,
+            "post_name": i.post_name,
+            "user_id": i.user_id,
+            "recipe": i.recipe
+        })
+
+    for i in comment_info:
+        commentArray.append({
+            "id": i.id,
+            "post_id": i.post_id,
+            "user_id": i.user_id,
+            "text": i.text,
+            "rating": i.rating
+        })
+
     return {
-        "posts":jsonify(post_info),
-        "comments":jsonify(comment_info)
+        "posts":postArray,
+        "comments":commentArray
     }
 
 @app.route("/explore/")

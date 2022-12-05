@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function loadPostPreview() {
-    const postDir = "" //GOES TO "/profile/<int:userid>/jsondump/"
+    const postDir = `/profile/${userid}/jsondump/`;
+    //FIGURE OUT HOW TO TRANSFER USERID TO THIS. NEEDS IT.
     const postDiv = document.getElementById("post-div");
 
     fetch(postDir)
