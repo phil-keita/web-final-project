@@ -34,12 +34,15 @@ async function loadCommentPreview() {
         if (comments[i] !== null) {
             const hr = document.createElement("hr");
             const title = document.createElement("h2");
-            title.innerText = `${comments[i].post_name}`;
+            title.innerText = `${comments[i].post_id}`;
         
             const preview = document.createElement("p");
-            const text = `${comments[i].recipe}`.substring(1,50) + "...";
+            const text = `${comments[i].text}`.substring(1,50) + "...";
             preview.innerText = text;
-            commentDiv.append(hr, title, preview);
+
+            const rating = document.createElement("p");
+            rating.innerText = `${comments[i].rating}`;
+            commentDiv.append(hr, title, preview, rating);
         }
     }
     const hr = document.createElement("hr");
