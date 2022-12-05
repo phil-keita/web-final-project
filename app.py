@@ -35,6 +35,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     post_name = db.Column(db.Unicode, nullable=False)
     user_id = db.Column(db.Unicode, db.ForeignKey('Users.id'))
+    ingredients = db.Column(db.Unicode, nullable=False)
     recipe = db.Column(db.Unicode, nullable=False)
 
 class Comment(db.Model):
@@ -108,7 +109,7 @@ def post_register(): #TODO: REGISTER PAGE
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect(url_for('index'))
+    return redirect(url_for('get_login'))
 
 @app.get("/ingredients/")
 @login_required
@@ -160,7 +161,8 @@ def post_post():
     #user_id = session["username"]
     recipe = form.recipe.data
     #user_id placeholder
-    new_post = Post(post_name=post_name, user_id = 1, recipe=recipe)
+    ingredients = str(form.ingredients.data)
+    new_post = Post(post_name=post_name, user_id = 1, ingredients=ingredients , recipe=recipe)
     db.session.add(new_post)
     db.session.commit()
     return redirect(url_for("explore_page"))
