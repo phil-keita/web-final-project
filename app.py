@@ -173,7 +173,7 @@ def get_post():
         fields.append(ingredient)
 
     # Try this, maybe?
-    form.ingredients.data = fields
+    form.ingredients = fields
 
     # if (pre_form.is_submitted() == False):
         # return redirect(url_for("get_pre_post"))
