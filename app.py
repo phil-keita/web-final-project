@@ -1,10 +1,11 @@
 import email
 from click import password_option
-from flask import Flask, jsonify, render_template, url_for, redirect, flash, session
+from flask import Flask, jsonify, render_template, url_for, redirect, flash, session, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from flask_login import login_required, login_user, LoginManager, logout_user, UserMixin, current_user
 import os
+
 
 from userform import Login_form, Register_Form, Post_Form, Comment_Form, PrePostForm, IngrediantForm
 
@@ -172,6 +173,8 @@ def get_post():
         ingredient.name.label = f"Ingredient {x+1}"
         fields.append(ingredient)
 
+    print(fields)
+
     # Try this, maybe?
     form.ingredients = fields
 
@@ -196,11 +199,13 @@ def post_post():
     #user_id placeholder
     units = session['units']
     ingredients = ""
-    x = form.ingredients
+    # x = form.ingredients
     for x in form.ingredients:
-        print(x)
-        name = x.data['name']
-        quantity = x.data['quantity']
+        print(f"{x} +\n")
+        name = request.form.get("name")
+        # name = x.data['name']
+        quantity = request.form.get("quantity")
+        # quantity = x.data['quantity']
         ingredients += str(name) + " " + str(quantity)
         name = ""
         quantity = ""
