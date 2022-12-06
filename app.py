@@ -166,22 +166,14 @@ def get_post():
     num = session['num_ingredients']
     units = session['units']
 
-    ingredient_names = ["Ingredient 1", "Ingredient 2", "Ingredient 3", "Ingredient 4", "Ingredient 5",
-     "Ingredient 6", "Ingredient 7", "Ingredient 8", "Ingredient 9", "Ingredient 10",
-     "Ingredient 11", "Ingredient 12", "Ingredient 13", "Ingredient 14", "Ingredient 15",
-     "Ingredient 16", "Ingredient 17", "Ingredient 18", "Ingredient 19", "Ingredient 20",
-     "Ingredient 21", "Ingredient 22", "Ingredient 23", "Ingredient 24", "Ingredient 25",
-     "Ingredient 26", "Ingredient 27", "Ingredient 28", "Ingredient 29", "Ingredient 30",]
-
     fields = []
     for x in range(0, num):
         ingredient = IngrediantForm()
-        ingredient.name.label = ingredient_names[x]
+        ingredient.name.label = f"Ingredient {x+1}"
         fields.append(ingredient)
 
-    form.ingredients = fields
-
-
+    # Try this, maybe?
+    form.ingredients.data = fields
 
     # if (pre_form.is_submitted() == False):
         # return redirect(url_for("get_pre_post"))
