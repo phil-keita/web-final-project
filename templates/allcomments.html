@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script id="getscript" posts="{{posts}}" comments="{{comments}}"></script>
+    <a href="#" id="usernum" data="{{user.id}}"></a>
     <script type="text/javascript" src="/static/styles/fullcomments.js"></script>
     <!-- WHY IS THIS GIVING 404s??? -->
     <title>{{user.username}}'s Posts</title>
@@ -21,8 +22,9 @@
         
     </div>
     <hr>
-    <form action="">
+    <form action="/profile/{{user.id}}">
         <!-- Return to profile button -->
+        <button type="submit" value="Return">Return to Profile</button>
     </form>
 </body>
 </html>

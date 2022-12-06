@@ -246,25 +246,21 @@ def user_profile():
     return redirect(f"/profile/{usernum}")
 
 @app.route("/profile/<int:userid>/")
-def profile_view(userid):  #TODO: VIEWING A PERSON'S PROFILE PAGE WITH ALL OF THEIR RECIPE POSTS
+def profile_view(userid):  # VIEWING A PERSON'S PROFILE PAGE WITH ALL OF THEIR RECIPE POSTS
     profile_user = User.query.filter_by(id=userid).first()
-    post_info = Post.query.filter_by(user_id=userid).order_by(desc(Post.id)).all()
-    comment_info = Comment.query.filter_by(user_id=userid).order_by(desc(Comment.id)).all()
-    return render_template("profile.html", user=profile_user, posts=[i.__dict__ for i in post_info], comments=[i.__dict__ for i in comment_info])
+    return render_template("profile.html", user=profile_user)
 
-@app.route("/profile/<int:userid>/posts/")  #TODO: VIEWING ALL POSTS OF THE USER
+@app.route("/profile/<int:userid>/posts/")  # VIEWING ALL POSTS OF THE USER
 def profile_posts(userid):
     profile_user = User.query.filter_by(id=userid).first()
-    post_info = Post.query.filter_by(user_id=userid).order_by(desc(Post.id)).all()
-    return render_template("profile.html", user=profile_user, posts=post_info)
+    return render_template("allposts.html", user=profile_user)
 
-@app.route("/profile/<int:userid>/comments/") #TODO: VIEWING ALL COMMENTS OF THE USER
+@app.route("/profile/<int:userid>/comments/") # VIEWING ALL COMMENTS OF THE USER
 def profile_comments(userid):
     profile_user = User.query.filter_by(id=userid).first()
-    comment_info = Comment.query.filter_by(user_id=userid).order_by(desc(Comment.id)).all()
-    return render_template("profile.html", user=profile_user, comments=comment_info)
+    return render_template("allcomments.html", user=profile_user)
 
-@app.route("/profile/<int:userid>/jsondump/") #TODO: JSON FOR AJAX
+@app.route("/profile/<int:userid>/jsondump/") # JSON FOR AJAX
 def user_json_dump(userid):
     post_info = Post.query.filter_by(user_id=userid).order_by(desc(Post.id)).all()
     postArray = []
