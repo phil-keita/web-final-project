@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm, Form
-from wtforms.fields import StringField, SubmitField, EmailField, SelectField, FieldList, FormField, IntegerField
+from wtforms.fields import StringField, SubmitField, EmailField, SelectField, FieldList, FormField, IntegerField, FileField
 from wtforms.validators import InputRequired, Email, Length, EqualTo, NumberRange, Optional
 
 class Register_Form(FlaskForm):
@@ -22,13 +22,13 @@ class PrePostForm(FlaskForm):
 
 
 class IngrediantForm(Form):
-    name = StringField('Ingrediant:', validators=[InputRequired()])
-    quantity = IntegerField('Quantity:' , validators=[InputRequired(), NumberRange(min=1)])
+    name = StringField('Ingrediant:')
+    quantity = IntegerField('Quantity:')
 
 
 class Post_Form(FlaskForm):
     post_name = StringField("Title ", validators=[InputRequired()])
-    ingredients = FieldList(FormField(IngrediantForm, label=None), min_entries=1)
+    ingredients = FieldList(FormField(IngrediantForm), min_entries=1, max_entries=30)
     recipe = StringField("Enter Recipe Here ", validators=[InputRequired()])
     im_units = SelectField('Units:', choices=('tsp', 'tbsp', 'floz', 'cup', 'gal', 'oz', 'lb'), validators=[Optional()])
     m_units = SelectField('Units:', choices=('ml', 'l', 'mg', 'g', 'kg'), validators=[Optional()])

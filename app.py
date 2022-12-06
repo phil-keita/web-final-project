@@ -6,7 +6,7 @@ from sqlalchemy import desc
 from flask_login import login_required, login_user, LoginManager, logout_user, UserMixin, current_user
 import os
 
-from userform import Login_form, Register_Form, Post_Form, Comment_Form, PrePostForm
+from userform import Login_form, Register_Form, Post_Form, Comment_Form, PrePostForm, IngrediantForm
 
 app = Flask(__name__)
 script_dir = os.path.abspath(os.path.dirname(__file__))
@@ -35,6 +35,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     post_name = db.Column(db.Unicode, nullable=False)
     user_id = db.Column(db.Unicode, db.ForeignKey('Users.id'))
+    units = db.Column(db.Unicode, nullable=False)
     ingredients = db.Column(db.Unicode, nullable=False)
     recipe = db.Column(db.Unicode, nullable=False)
 
@@ -129,7 +130,6 @@ def post_pre_post():
     
     ingredients = form.num_ingredients.data
     units = form.units.data
-    print(units)
     session['num_ingredients'] = ingredients
     session['units'] = units
 
@@ -139,30 +139,58 @@ def post_pre_post():
 @app.get("/post/")
 @login_required
 def get_post():
-    pre_form = PrePostForm()
     form = Post_Form()
     num = session['num_ingredients']
     units = session['units']
+
+    ingredient_names = ["Ingredient 1", "Ingredient 2", "Ingredient 3", "Ingredient 4", "Ingredient 5",
+     "Ingredient 6", "Ingredient 7", "Ingredient 8", "Ingredient 9", "Ingredient 10",
+     "Ingredient 11", "Ingredient 12", "Ingredient 13", "Ingredient 14", "Ingredient 15",
+     "Ingredient 16", "Ingredient 17", "Ingredient 18", "Ingredient 19", "Ingredient 20",
+     "Ingredient 21", "Ingredient 22", "Ingredient 23", "Ingredient 24", "Ingredient 25",
+     "Ingredient 26", "Ingredient 27", "Ingredient 28", "Ingredient 29", "Ingredient 30",]
+
+    fields = []
+    for x in range(0, num):
+        ingredient = IngrediantForm()
+        ingredient.name.label = ingredient_names[x]
+        fields.append(ingredient)
+
+    form.ingredients = fields
+
+
+
     # if (pre_form.is_submitted() == False):
         # return redirect(url_for("get_pre_post"))
-    return render_template("post.html", form=form, num=num, units=units)
+    return render_template("post.html", form=form, num=num, units=units, ingredient=ingredient)
     
 @app.post("/post/")
 @login_required
 def post_post():
     form = Post_Form()
-    
     if not form.validate():
         for field,error in form.errors.items():
             flash(f"{field} - {error}")
         return redirect(url_for("get_post"))
+
+    
     
     post_name = form.post_name.data
     #user_id = session["username"]
     recipe = form.recipe.data
     #user_id placeholder
-    ingredients = str(form.ingredients.data)
-    new_post = Post(post_name=post_name, user_id = 1, ingredients=ingredients , recipe=recipe)
+    units = session['units']
+    ingredients = ""
+    x = form.ingredients
+    for x in form.ingredients:
+        print(x)
+        name = x.data['name']
+        quantity = x.data['quantity']
+        ingredients += str(name) + " " + str(quantity)
+        name = ""
+        quantity = ""
+
+    new_post = Post(post_name=post_name, user_id = 1, units=units, ingredients=ingredients , recipe=recipe)
     db.session.add(new_post)
     db.session.commit()
     return redirect(url_for("explore_page"))
