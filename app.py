@@ -29,6 +29,11 @@ class User(UserMixin, db.Model):
     username = db.Column(db.Unicode, nullable=False)
     email = db.Column(db.Unicode, nullable=False)
     password = db.Column(db.Unicode, nullable=False)
+    def tojson(self):
+        return {
+            "id": self.id,
+            "username": self.username
+        }
 
 class Post(db.Model):
     __tablename__ = 'Posts'
@@ -38,6 +43,14 @@ class Post(db.Model):
     units = db.Column(db.Unicode, nullable=False)
     ingredients = db.Column(db.Unicode, nullable=False)
     recipe = db.Column(db.Unicode, nullable=False)
+    def tojson(self):
+        return {
+            "id": self.id,
+            "post_name": self.post_name,
+            "user_id": self.user_id,
+            "recipe": self.recipe,
+            "userinfo": User.query.get(self.user_id).tojson()
+        }
 
 class Comment(db.Model):
     __tablename__ = 'Comments'
@@ -46,6 +59,16 @@ class Comment(db.Model):
     user_id = db.Column(db.Unicode, db.ForeignKey('Users.id'))
     text = db.Column(db.Unicode, nullable=False)
     rating = db.Column(db.Unicode, nullable=False)
+    def tojson(self):
+        return {
+            "id": self.id,
+            "post_id": self.post_id,
+            "user_id": self.user_id,
+            "text": self.text,
+            "rating": self.rating,
+            "postinfo": (Post.query.get(self.post_id)).tojson()
+        }
+
 with app.app_context():
     db.drop_all()
     db.create_all()
@@ -251,21 +274,10 @@ def user_json_dump(userid):
     comment_info = Comment.query.filter_by(user_id=userid).order_by(desc(Comment.id)).all()
     commentArray = []
     for i in post_info:
-        postArray.append({
-            "id": i.id,
-            "post_name": i.post_name,
-            "user_id": i.user_id,
-            "recipe": i.recipe
-        })
+        postArray.append(i.tojson())
 
     for i in comment_info:
-        commentArray.append({
-            "id": i.id,
-            "post_id": i.post_id,
-            "user_id": i.user_id,
-            "text": i.text,
-            "rating": i.rating
-        })
+        commentArray.append(i.tojson())
 
     return {
         "posts":postArray,
