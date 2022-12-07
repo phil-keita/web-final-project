@@ -119,6 +119,7 @@ def get_register():
 
 @app.post("/register/")
 def post_register(): #TODO: REGISTER PAGE
+    session['is_submitted'] = "False"
     form = Register_Form()
     check_name = User.query.filter_by(username=form.username.data).first()
     #check_email = User.query.filter_by(email=form.email.data).first()
@@ -165,6 +166,7 @@ def post_pre_post():
     units = form.units.data
     session['num_ingredients'] = ingredients
     session['units'] = units
+    session['is_submitted'] = "True"
 
     return redirect(url_for("get_post"))
 
@@ -172,43 +174,46 @@ def post_pre_post():
 @app.get("/post/")
 @login_required
 def get_post():
-    form = Post_Form()
-    num = session['num_ingredients']
-    units = session['units']
+    if(session['is_submitted'] == "True"):
+        form = Post_Form()
+        num = session['num_ingredients']
+        units = session['units']
 
-    fields = []
-    u_fields = []
-    names = []
-    quantities = []
-    im_units = []
-    m_units = []
-    for x in range(0, num):
-        ingredient = IngrediantForm()
-        ingredient.name.label = f"Ingredient {x+1}"
-        ingredient.name.name = f"Ingredient {x+1}"
-        ingredient.quantity.name = f"Quantity {x+1}"
-        ingredient.im_units.name = f"im_units {x+1}"
-        ingredient.m_units.name = f"m_units {x+1}"
-        fields.append(ingredient)
-        names.append(ingredient.name.name)
-        quantities.append(ingredient.quantity.name)
-        m_units.append(ingredient.m_units.name)
-        im_units.append(ingredient.im_units.name)
+        fields = []
+        u_fields = []
+        names = []
+        quantities = []
+        im_units = []
+        m_units = []
+        for x in range(0, num):
+            ingredient = IngrediantForm()
+            ingredient.name.label = f"Ingredient {x+1}"
+            ingredient.name.name = f"Ingredient {x+1}"
+            ingredient.quantity.name = f"Quantity {x+1}"
+            ingredient.im_units.name = f"im_units {x+1}"
+            ingredient.m_units.name = f"m_units {x+1}"
+            fields.append(ingredient)
+            names.append(ingredient.name.name)
+            quantities.append(ingredient.quantity.name)
+            m_units.append(ingredient.m_units.name)
+            im_units.append(ingredient.im_units.name)
 
 
 
 
     # Try this, maybe?
-    form.ingredients = fields
-    form.units = u_fields
-    session['ingredients'] = names
-    session['quantities'] = quantities
-    session['metric'] = m_units
-    session['imperial'] = im_units
+        form.ingredients = fields
+        form.units = u_fields
+        session['ingredients'] = names
+        session['quantities'] = quantities
+        session['metric'] = m_units
+        session['imperial'] = im_units
 
     # if (pre_form.is_submitted() == False):
         # return redirect(url_for("get_pre_post"))
-    return render_template("post.html", form=form, num=num, units=units, ingredient=ingredient)
+        return render_template("post.html", form=form, num=num, units=units, ingredient=ingredient)
+    else:
+        return redirect(url_for("get_pre_post"))
     
 @app.post("/post/")
 @login_required
