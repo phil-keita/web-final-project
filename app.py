@@ -168,24 +168,34 @@ def get_post():
     units = session['units']
 
     fields = []
+    u_fields = []
     names = []
     quantities = []
+    im_units = []
+    m_units = []
     for x in range(0, num):
         ingredient = IngrediantForm()
         ingredient.name.label = f"Ingredient {x+1}"
         ingredient.name.name = f"Ingredient {x+1}"
         ingredient.quantity.name = f"Quantity {x+1}"
+        ingredient.im_units.name = f"im_units {x+1}"
+        ingredient.m_units.name = f"m_units {x+1}"
         fields.append(ingredient)
         names.append(ingredient.name.name)
         quantities.append(ingredient.quantity.name)
+        m_units.append(ingredient.m_units.name)
+        im_units.append(ingredient.im_units.name)
 
 
 
 
     # Try this, maybe?
     form.ingredients = fields
+    form.units = u_fields
     session['ingredients'] = names
     session['quantities'] = quantities
+    session['metric'] = m_units
+    session['imperial'] = im_units
 
     # if (pre_form.is_submitted() == False):
         # return redirect(url_for("get_pre_post"))
@@ -203,6 +213,8 @@ def post_post():
    
     session_names = session['ingredients']
     session_quan = session['quantities']
+    session_metric = session['metric']
+    session_imperial = session['imperial']
     
     print(session_names)
     print(session_quan)
@@ -210,7 +222,7 @@ def post_post():
     for i in range(len(session_names)):
         name = request.form.get(session_names[i])
         quantity = request.form.get(session_quan[i])
-        
+                
 
     
     post_name = form.post_name.data
@@ -223,7 +235,11 @@ def post_post():
     for i in range(len(session_names)):
         name = request.form.get(session_names[i])
         quantity = request.form.get(session_quan[i])
-        ingredients += str(name) + ", " + str(quantity) + "\n"
+        if (session['units'] == "Metric"):
+            units = request.form.get(session_metric[i])
+        else:
+            units = request.form.get(session_imperial[i])
+        ingredients += str(name) + ", " + str(quantity) + ", " + str(units) + "\n"
 
 
     new_post = Post(post_name=post_name, user_id = 1, units=units, ingredients=ingredients , recipe=recipe)

@@ -27,7 +27,7 @@
         {% for entry in form.ingredients %}
         <h4> {{entry.name.label}}: {{entry.name}}</h4>
         <p>{{entry.quantity.label}} {{entry.quantity}}</p>
-        <p>{{form.im_units.label}} {{form.im_units}}</p>
+        <p>{{entry.im_units.label}} {{entry.im_units}}</p>
         {% endfor %}
         {% endif %}
         {% if units == "Metric" %}
@@ -35,7 +35,8 @@
         {% for entry in form.ingredients %}
         <h4>{{entry.name.label}}: {{entry.name}}</h4>
         <p>{{entry.quantity.label}} {{entry.quantity}}</p>
-        <p>{{form.m_units.label}} {{form.m_units}}</p>
+        <p>{{entry.m_units.label}} {{entry.m_units}}</p>
+
         {% endfor %}
         {% endif %}
         <h2>Steps</h2>
