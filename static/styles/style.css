@@ -16,6 +16,8 @@
     /* background-image: url("/static/styles/images/background-image.jpg"); */
     /* background: linear-gradient(45deg, var(--main-color), var(--darker-main-color)); */
     background-color: var(--darker-main-color);
+    width: 100%;
+    min-height: 100vh;
 }
 
 #form-container {
@@ -47,10 +49,21 @@
 
 #prepost-card{
     text-align: left;
-    background-color: var(--main-color);
+    background-color: var(--darker-main-color);
     color: white;
-    width: 500px;
-    border-color: var(--main-color);
+    width: 600px;
+    border-color: var(--accent-color);
+    padding-top: 1%;
+    padding-bottom: 1%;
+
+}
+#post-form{
+    text-align: left;
+    background-color: var(--darker-main-color);
+    color: white;
+    width:600px;
+    border-color: var(--darker-main-color);
+    padding-left: 5%;
 }
 
 #button {
@@ -92,7 +105,7 @@
 }
 
 #profile-pic {
-    width: 40px;
+    width: 50px;
     border-radius: 50%;
 }
 
@@ -111,7 +124,7 @@
 
 #carousel {
     width: 50rem;
-    height: 25rem;
+    height: 20rem;
     object-fit: cover;
 }
 
@@ -129,10 +142,27 @@
 }
 
 .dropdown-toggle{
-    background: var(--accent-color);
+    background: var(--darker-main-color);
+    border-color: var(--accent-color);
 }
 
 .dropdown-toggle:hover{
-    background: var(--darker-main-color);
+    background: var(--main-color);
     border-color: var(--accent-color);
+}
+
+.dropdown-toggle:focus{
+    background: var(--main-color);
+    border-color: var(--accent-color);
+}
+
+.dropdown-toggle:checked{
+    background: var(--main-color);
+    border-color: var(--accent-color);
+}
+
+hr{
+    height: 1px;
+    background-color: var(--accent-color);
+    border: none;
 }
