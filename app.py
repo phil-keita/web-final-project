@@ -168,15 +168,24 @@ def get_post():
     units = session['units']
 
     fields = []
+    names = []
+    quantities = []
     for x in range(0, num):
         ingredient = IngrediantForm()
         ingredient.name.label = f"Ingredient {x+1}"
+        ingredient.name.name = f"Ingredient {x+1}"
+        ingredient.quantity.name = f"Quantity {x+1}"
         fields.append(ingredient)
+        names.append(ingredient.name.name)
+        quantities.append(ingredient.quantity.name)
 
-    print(fields)
+
+
 
     # Try this, maybe?
     form.ingredients = fields
+    session['ingredients'] = names
+    session['quantities'] = quantities
 
     # if (pre_form.is_submitted() == False):
         # return redirect(url_for("get_pre_post"))
@@ -186,29 +195,36 @@ def get_post():
 @login_required
 def post_post():
     form = Post_Form()
+    
     if not form.validate():
         for field,error in form.errors.items():
             flash(f"{field} - {error}")
         return redirect(url_for("get_post"))
-
+   
+    session_names = session['ingredients']
+    session_quan = session['quantities']
     
+    print(session_names)
+    print(session_quan)
+    
+    for i in range(len(session_names)):
+        name = request.form.get(session_names[i])
+        quantity = request.form.get(session_quan[i])
+        
+
     
     post_name = form.post_name.data
     #user_id = session["username"]
     recipe = form.recipe.data
     #user_id placeholder
     units = session['units']
-    ingredients = ""
+    ingredients= ""
     # x = form.ingredients
-    for x in form.ingredients:
-        print(f"{x} +\n")
-        name = request.form.get("name")
-        # name = x.data['name']
-        quantity = request.form.get("quantity")
-        # quantity = x.data['quantity']
-        ingredients += str(name) + " " + str(quantity)
-        name = ""
-        quantity = ""
+    for i in range(len(session_names)):
+        name = request.form.get(session_names[i])
+        quantity = request.form.get(session_quan[i])
+        ingredients += str(name) + ", " + str(quantity) + "\n"
+
 
     new_post = Post(post_name=post_name, user_id = 1, units=units, ingredients=ingredients , recipe=recipe)
     db.session.add(new_post)
