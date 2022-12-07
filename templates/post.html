@@ -82,8 +82,8 @@
                                 {{entry.quantity.label(class="form-label")}}
                                 {{entry.quantity(class="form-control", id="input", style="width: 100px;")}}
 
-                                {{form.im_units.label(class="form-label")}}
-                                {{form.im_units(class="btn btn-secondary dropdown-toggle", style="width: 150px;")}}
+                                {{entry.im_units.label(class="form-label")}}
+                                {{entry.im_units(class="btn btn-secondary dropdown-toggle", style="width: 150px;")}}
                                 {% endfor %}
                             </div>
                             {% endif %}
@@ -100,8 +100,8 @@
                                     {{entry.quantity(class="form-control", id="input", style="width: 100px;")}}
                                 </div>
                                 <div class="row pt-2 pb-2">
-                                    {{form.m_units.label(class="form-label")}}
-                                    {{form.m_units(class="btn btn-secondary dropdown-toggle", style="width: 150px;")}}
+                                    {{entry.m_units.label(class="form-label")}}
+                                    {{entry.m_units(class="btn btn-secondary dropdown-toggle", style="width: 150px;")}}
                                 </div>
                                 <hr>
                                 {% endfor %}
