@@ -24,14 +24,18 @@ class PrePostForm(FlaskForm):
 class IngrediantForm(Form):
     name = StringField('Ingrediant:')
     quantity = IntegerField('Quantity:')
+    im_units = SelectField('Units:', choices=('tsp', 'tbsp', 'floz', 'cup', 'gal', 'oz', 'lb', 'None'), validators=[Optional()])
+    m_units = SelectField('Units:', choices=('ml', 'l', 'mg', 'g', 'kg', 'None'), validators=[Optional()])
 
+
+    
 
 class Post_Form(FlaskForm):
     post_name = StringField("Title ", validators=[InputRequired()])
     ingredients = FieldList(FormField(IngrediantForm), min_entries=1, max_entries=30)
     recipe = StringField("Enter Recipe Here ", validators=[InputRequired()])
-    im_units = SelectField('Units:', choices=('tsp', 'tbsp', 'floz', 'cup', 'gal', 'oz', 'lb'), validators=[Optional()])
-    m_units = SelectField('Units:', choices=('ml', 'l', 'mg', 'g', 'kg'), validators=[Optional()])
+    # im_units = SelectField('Units:', choices=('tsp', 'tbsp', 'floz', 'cup', 'gal', 'oz', 'lb', 'None'), validators=[Optional()])
+    # m_units = SelectField('Units:', choices=('ml', 'l', 'mg', 'g', 'kg', 'None'), validators=[Optional()])
     submit = SubmitField("Post")
     #TODO: ADD HERE IF NEEDED
 
@@ -41,6 +45,5 @@ class Comment_Form(FlaskForm):
     submit = SubmitField("Comment")
     #TODO: ADD HERE IF NEEDED
 
-        
 
 

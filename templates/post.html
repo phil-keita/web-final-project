@@ -72,6 +72,37 @@
             </div> 
         </form>
     </div>
+<<<<<<< HEAD
+=======
+
+    <form action="/post/" method="post">
+        <h2>Recipe Name</h2>
+        {{ form.hidden_tag() }}
+        {{ form.post_name.label }}
+        {{ form.post_name }}
+        {% if units == "Imperial" %}
+        <h2>Ingredients</h2>
+        {% for entry in form.ingredients %}
+        <h4> {{entry.name.label}}: {{entry.name}}</h4>
+        <p>{{entry.quantity.label}} {{entry.quantity}}</p>
+        <p>{{entry.im_units.label}} {{entry.im_units}}</p>
+        {% endfor %}
+        {% endif %}
+        {% if units == "Metric" %}
+        <h2>Ingredients</h2>
+        {% for entry in form.ingredients %}
+        <h4>{{entry.name.label}}: {{entry.name}}</h4>
+        <p>{{entry.quantity.label}} {{entry.quantity}}</p>
+        <p>{{entry.m_units.label}} {{entry.m_units}}</p>
+
+        {% endfor %}
+        {% endif %}
+        <h2>Steps</h2>
+        {{ form.recipe.label }}
+        {{ form.recipe }}
+        {{ form.submit }}
+    </form>
+>>>>>>> 7d02da3dcac76491608962332c0eaee76c85873b
 </body>
 
 </html>

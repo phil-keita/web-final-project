@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{post.post_name}}</title>
+</head>
+<body>
+    <div id="title-div">
+        <h2>{{post.post_name}}</h2>
+        <h4>by {{user.username}}</h4>
+        <h4>{{post.rating}} Stars - {{post.numcomments}} Comments</h4>  
+    </div>
+    <hr>
+    <div>
+        <h2>
+            Ingredients Needed:
+        </h2>
+        {% set ingredient_list = post.ingredients.split("\n") %}
+        <ul>
+            {% for i in range(0, (ingredient_list|length)-1) %}
+            <li>
+                {{ingredient_list[i]}}
+            </li>
+            {% endfor %}
+        </ul>
+        <hr>
+        <h2>
+            Instructions:
+        </h2>
+        <p>
+            {{post.recipe}}
+        </p>
+        <hr>
+    </div>
+    <!-- ADD A WAY TO COMMENT AND RATE THE POST HERE -->
+</body>
+</html>

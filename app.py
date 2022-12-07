@@ -45,12 +45,21 @@ class Post(db.Model):
     ingredients = db.Column(db.Unicode, nullable=False)
     recipe = db.Column(db.Unicode, nullable=False)
     def tojson(self):
+        post_comments = Comment.query.filter_by(post_id=self.id).all()
+        total = 0
+        if (len(post_comments) != 0):
+            for i in post_comments:
+                total += i.rating
+            total = float(total)/float(len(post_comments))
         return {
             "id": self.id,
             "post_name": self.post_name,
             "user_id": self.user_id,
+            "ingredients": self.ingredients,
             "recipe": self.recipe,
-            "userinfo": User.query.get(self.user_id).tojson()
+            "userinfo": User.query.get(self.user_id).tojson(),
+            "rating": total,
+            "numcomments": len(post_comments)
         }
 
 class Comment(db.Model):
@@ -110,6 +119,7 @@ def get_register():
 
 @app.post("/register/")
 def post_register(): #TODO: REGISTER PAGE
+    session['is_submitted'] = "False"
     form = Register_Form()
     check_name = User.query.filter_by(username=form.username.data).first()
     #check_email = User.query.filter_by(email=form.email.data).first()
@@ -156,6 +166,7 @@ def post_pre_post():
     units = form.units.data
     session['num_ingredients'] = ingredients
     session['units'] = units
+    session['is_submitted'] = "True"
 
     return redirect(url_for("get_post"))
 
@@ -163,33 +174,46 @@ def post_pre_post():
 @app.get("/post/")
 @login_required
 def get_post():
-    form = Post_Form()
-    num = session['num_ingredients']
-    units = session['units']
+    if(session['is_submitted'] == "True"):
+        form = Post_Form()
+        num = session['num_ingredients']
+        units = session['units']
 
-    fields = []
-    names = []
-    quantities = []
-    for x in range(0, num):
-        ingredient = IngrediantForm()
-        ingredient.name.label = f"Ingredient {x+1}"
-        ingredient.name.name = f"Ingredient {x+1}"
-        ingredient.quantity.name = f"Quantity {x+1}"
-        fields.append(ingredient)
-        names.append(ingredient.name.name)
-        quantities.append(ingredient.quantity.name)
+        fields = []
+        u_fields = []
+        names = []
+        quantities = []
+        im_units = []
+        m_units = []
+        for x in range(0, num):
+            ingredient = IngrediantForm()
+            ingredient.name.label = f"Ingredient {x+1}"
+            ingredient.name.name = f"Ingredient {x+1}"
+            ingredient.quantity.name = f"Quantity {x+1}"
+            ingredient.im_units.name = f"im_units {x+1}"
+            ingredient.m_units.name = f"m_units {x+1}"
+            fields.append(ingredient)
+            names.append(ingredient.name.name)
+            quantities.append(ingredient.quantity.name)
+            m_units.append(ingredient.m_units.name)
+            im_units.append(ingredient.im_units.name)
 
 
 
 
     # Try this, maybe?
-    form.ingredients = fields
-    session['ingredients'] = names
-    session['quantities'] = quantities
+        form.ingredients = fields
+        form.units = u_fields
+        session['ingredients'] = names
+        session['quantities'] = quantities
+        session['metric'] = m_units
+        session['imperial'] = im_units
 
     # if (pre_form.is_submitted() == False):
         # return redirect(url_for("get_pre_post"))
-    return render_template("post.html", form=form, num=num, units=units, ingredient=ingredient)
+        return render_template("post.html", form=form, num=num, units=units, ingredient=ingredient)
+    else:
+        return redirect(url_for("get_pre_post"))
     
 @app.post("/post/")
 @login_required
@@ -203,6 +227,8 @@ def post_post():
    
     session_names = session['ingredients']
     session_quan = session['quantities']
+    session_metric = session['metric']
+    session_imperial = session['imperial']
     
     print(session_names)
     print(session_quan)
@@ -210,7 +236,7 @@ def post_post():
     for i in range(len(session_names)):
         name = request.form.get(session_names[i])
         quantity = request.form.get(session_quan[i])
-        
+                
 
     
     post_name = form.post_name.data
@@ -223,7 +249,11 @@ def post_post():
     for i in range(len(session_names)):
         name = request.form.get(session_names[i])
         quantity = request.form.get(session_quan[i])
-        ingredients += str(name) + ", " + str(quantity) + "\n"
+        if (session['units'] == "Metric"):
+            units = request.form.get(session_metric[i])
+        else:
+            units = request.form.get(session_imperial[i])
+        ingredients += str(name) + ", " + str(quantity) + ", " + str(units) + "\n"
 
 
     new_post = Post(post_name=post_name, user_id = 1, units=units, ingredients=ingredients , recipe=recipe)
@@ -301,7 +331,16 @@ def explore_page(postid=0):
         all_posts = Post.query.order_by(Post.id).all()
         return render_template("homepage.html", posts=all_posts)
     #TODO: Then display the actual post itself in full-view mode
-    pass
+    selected_post = Post.query.get(postid)
+    original_poster = User.query.get(selected_post.user_id)
+    if (selected_post != None):
+        return render_template("view_post.html", post=selected_post.tojson(), user=original_poster.tojson())
+    return "This post does not exist.", 404
+
+@app.route("/explore/postjsondump/")
+def explore_json():
+    all_posts = Post.query.order_by(desc(Post.id)).all()
+    return [i.tojson for i in all_posts]
 
 @app.route("/logout/")
 @login_required
