@@ -10,16 +10,29 @@
     <div id="title-div">
         <h2>{{post.post_name}}</h2>
         <h4>by {{user.username}}</h4>
-        <hr>
     </div>
+    <hr>
     <div>
+        <h2>
+            Ingredients Needed:
+        </h2>
+        {% set ingredient_list = post.ingredients.split("\n") %}
         <ul>
-            {% for i in post.ingredients %}
+            {% for i in range(0, (ingredient_list|length)-1) %}
             <li>
-                
+                {{ingredient_list[i]}}
             </li>
             {% endfor %}
         </ul>
+        <hr>
+        <h2>
+            Instructions:
+        </h2>
+        <p>
+            {{post.recipe}}
+        </p>
+        <hr>
     </div>
+    <!-- ADD A WAY TO COMMENT AND RATE THE POST HERE -->
 </body>
 </html>
