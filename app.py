@@ -280,7 +280,11 @@ def explore_page(postid=0):
         all_posts = Post.query.order_by(Post.id).all()
         return render_template("homepage.html", posts=all_posts)
     #TODO: Then display the actual post itself in full-view mode
-    pass
+    selected_post = Post.query.get(postid)
+    original_poster = User.query.get(selected_post.user_id)
+    if (selected_post != None):
+        return render_template("view_post.html", post=selected_post, user=original_poster.tojson())
+    return "This post does not exist.", 404
 
 @app.route("/logout/")
 @login_required
