@@ -12,16 +12,19 @@
 }
 
 #main-container {
-    /* color: white; */
+    color: white;
     /* background-image: url("/static/styles/images/background-image.jpg"); */
     /* background: linear-gradient(45deg, var(--main-color), var(--darker-main-color)); */
-    /* background-color: var(--darker-main-color); */
+    background-color: var(--darker-main-color);
+    width: 100%;
+    min-height: 100vh;
 }
 
 #form-container {
-    /* background: var(--main-color); */
+    background: var(--main-color);
     height: 100vh;
-    /* color: white; */
+    width: 100%;
+    color: white;
 }
 
 #menu-bar {
@@ -40,8 +43,27 @@
 }
 
 #card {
-    /* background-color: var(--darker-main-color);
-    color: white; */
+    background-color: var(--darker-main-color);
+    color: white;
+}
+
+#prepost-card{
+    text-align: left;
+    background-color: var(--darker-main-color);
+    color: white;
+    width: 600px;
+    border-color: var(--accent-color);
+    padding-top: 1%;
+    padding-bottom: 1%;
+
+}
+#post-form{
+    text-align: left;
+    background-color: var(--darker-main-color);
+    color: white;
+    width:600px;
+    border-color: var(--darker-main-color);
+    padding-left: 5%;
 }
 
 #button {
@@ -55,20 +77,20 @@
 }
 
 #input {
-    /*color: white;*/
+    color: white;
     border-color: var(--accent-color);
-    /* background-color: var(--darker-main-color); */
+    background-color: var(--darker-main-color);
     transition: .5s background-color;
 }
 
 #input:focus {
     border-color: var(--accent-color);
-    /* background-color: var(--main-color); */
+    background-color: var(--main-color);
 }
 
 #input:hover {
     border-color: var(--accent-color);
-    /* background-color: var(--main-color); */
+    background-color: var(--main-color);
     transition-delay: .1s;
 }
 
@@ -83,15 +105,15 @@
 }
 
 #profile-pic {
-    width: 40px;
+    width: 50px;
     border-radius: 50%;
 }
 
 #post {
     width: 50rem;
-    /* background-color: var(--main-color); */
-    /* color: white; */
-    border-color: var(--accent-color);
+    background-color: var(--main-color);
+    color: white;
+    border-color: var(--main-color);
     padding-left: 0%;
     padding-right: 0%;
 }
@@ -102,7 +124,7 @@
 
 #carousel {
     width: 50rem;
-    height: 25rem;
+    height: 20rem;
     object-fit: cover;
 }
 
@@ -112,9 +134,35 @@
 }
 
 .username {
-    color: black;
+    color: white;
 }
 
 .username:hover {
     color: var(--accent-color);
+}
+
+.dropdown-toggle{
+    background: var(--darker-main-color);
+    border-color: var(--accent-color);
+}
+
+.dropdown-toggle:hover{
+    background: var(--main-color);
+    border-color: var(--accent-color);
+}
+
+.dropdown-toggle:focus{
+    background: var(--main-color);
+    border-color: var(--accent-color);
+}
+
+.dropdown-toggle:checked{
+    background: var(--main-color);
+    border-color: var(--accent-color);
+}
+
+hr{
+    height: 1px;
+    background-color: var(--accent-color);
+    border: none;
 }

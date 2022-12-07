@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm, Form
-from wtforms.fields import StringField, SubmitField, EmailField, SelectField, FieldList, FormField, IntegerField, FileField
+from wtforms.fields import StringField, SubmitField, EmailField, SelectField, FieldList, FormField, IntegerField, FileField, TextAreaField
 from wtforms.validators import InputRequired, Email, Length, EqualTo, NumberRange, Optional
+from flask_wtf.file import FileRequired, FileAllowed
 
 class Register_Form(FlaskForm):
     username = StringField("Username ", validators=[InputRequired()])
@@ -32,10 +33,11 @@ class IngrediantForm(Form):
 
 class Post_Form(FlaskForm):
     post_name = StringField("Title ", validators=[InputRequired()])
-    ingredients = FieldList(FormField(IngrediantForm), min_entries=1, max_entries=30, validators=[InputRequired()])
-    recipe = StringField("Enter Recipe Here ", validators=[InputRequired()])
+    ingredients = FieldList(FormField(IngrediantForm), min_entries=1, max_entries=30)
+    recipe = TextAreaField("Enter Recipe Here ", validators=[InputRequired()])
     # im_units = SelectField('Units:', choices=('tsp', 'tbsp', 'floz', 'cup', 'gal', 'oz', 'lb', 'None'), validators=[Optional()])
-    # m_units = SelectField('Units:', choices=('ml', 'l', 'mg', 'g', 'kg', 'None'), validators=[Optional()])
+    m_units = SelectField('Units:', choices=('ml', 'l', 'mg', 'g', 'kg', 'None'), validators=[Optional()])
+    image = FileField(u'Image File', validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Images only!')])
     submit = SubmitField("Post")
     #TODO: ADD HERE IF NEEDED
 
