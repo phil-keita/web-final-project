@@ -33,7 +33,7 @@
                             <a class="nav-link" href="/">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/ingredients/">create recipe</a>
+                            <a class="nav-link" href="/ingredients/">Create recipe</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Saved Recipes</a>
@@ -58,7 +58,7 @@
             <form action="/post/" method="post">
                 {{ form.hidden_tag() }}
 
-                <div class="row pb-5 text-center">
+                <div class="row pb-2 text-center">
                     <div class="col"></div>
                     <div class="col">
                         <div class="card pb-3" id="post-form">
@@ -69,6 +69,7 @@
                     </div>
                     <div class="col"></div>
                 </div>
+                <hr>
                 <div class="row">
                     <div class="col">
                         <div class="card" id="post-form">
@@ -120,7 +121,7 @@
                             <div class="row pt-2">
                                 <h2>Upload images</h2>
                                 {{ form.image.label(class="form-label") }}
-                                {{ form.image(class="form-control-file", id="input") }}
+                                {{ form.image(class="form-control", id="input") }}
                             </div>
                         </div>
                     </div>
