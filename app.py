@@ -45,12 +45,21 @@ class Post(db.Model):
     ingredients = db.Column(db.Unicode, nullable=False)
     recipe = db.Column(db.Unicode, nullable=False)
     def tojson(self):
+        post_comments = Comment.query.filter_by(post_id=self.id).all()
+        total = 0
+        if (len(post_comments) != 0):
+            for i in post_comments:
+                total += i.rating
+            total = float(total)/float(len(post_comments))
         return {
             "id": self.id,
             "post_name": self.post_name,
             "user_id": self.user_id,
+            "ingredients": self.ingredients,
             "recipe": self.recipe,
-            "userinfo": User.query.get(self.user_id).tojson()
+            "userinfo": User.query.get(self.user_id).tojson(),
+            "rating": total,
+            "numcomments": len(post_comments)
         }
 
 class Comment(db.Model):
@@ -320,8 +329,13 @@ def explore_page(postid=0):
     selected_post = Post.query.get(postid)
     original_poster = User.query.get(selected_post.user_id)
     if (selected_post != None):
-        return render_template("view_post.html", post=selected_post, user=original_poster.tojson())
+        return render_template("view_post.html", post=selected_post.tojson(), user=original_poster.tojson())
     return "This post does not exist.", 404
+
+@app.route("/explore/postjsondump/")
+def explore_json():
+    all_posts = Post.query.order_by(desc(Post.id)).all()
+    return [i.tojson for i in all_posts]
 
 @app.route("/logout/")
 @login_required
