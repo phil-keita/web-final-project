@@ -175,6 +175,7 @@ def post_pre_post():
 @login_required
 def get_post():
     if(session['is_submitted'] == "True"):
+        session['is_submitted'] = "False"
         form = Post_Form()
         num = session['num_ingredients']
         units = session['units']

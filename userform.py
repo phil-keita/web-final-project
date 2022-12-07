@@ -36,7 +36,7 @@ class Post_Form(FlaskForm):
     ingredients = FieldList(FormField(IngrediantForm), min_entries=1, max_entries=30)
     recipe = TextAreaField("Enter Recipe Here ", validators=[InputRequired()])
     # im_units = SelectField('Units:', choices=('tsp', 'tbsp', 'floz', 'cup', 'gal', 'oz', 'lb', 'None'), validators=[Optional()])
-    m_units = SelectField('Units:', choices=('ml', 'l', 'mg', 'g', 'kg', 'None'), validators=[Optional()])
+    # m_units = SelectField('Units:', choices=('ml', 'l', 'mg', 'g', 'kg', 'None'), validators=[Optional()])
     image = FileField(u'Image File', validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Images only!')])
     submit = SubmitField("Post")
     #TODO: ADD HERE IF NEEDED
