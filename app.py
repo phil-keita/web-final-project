@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from flask_login import login_required, login_user, LoginManager, logout_user, UserMixin, current_user
 import os
+from unitconvert import volumeunits, massunits
+
 
 
 from userform import Login_form, Register_Form, Post_Form, Comment_Form, PrePostForm, IngrediantForm
@@ -43,8 +45,9 @@ class Post(db.Model):
     user_id = db.Column(db.Unicode, db.ForeignKey('Users.id'))
     units = db.Column(db.Unicode, nullable=False)
     ingredients = db.Column(db.Unicode, nullable=False)
+    converted_ingredients = db.Column(db.Unicode, nullable=False)
     recipe = db.Column(db.Unicode, nullable=False)
-    numlikes = db.Column(db.Integer, nullable=False)
+    # numlikes = db.Column(db.Integer, nullable=False)
     def tojson(self):
         post_comments = Comment.query.filter_by(post_id=self.id).all()
         total = 0
@@ -233,9 +236,6 @@ def post_post():
     session_metric = session['metric']
     session_imperial = session['imperial']
     
-    print(session_names)
-    print(session_quan)
-    
     for i in range(len(session_names)):
         name = request.form.get(session_names[i])
         quantity = request.form.get(session_quan[i])
@@ -248,18 +248,25 @@ def post_post():
     #user_id placeholder
     units = session['units']
     ingredients= ""
+    converted_ingredients =""
     # x = form.ingredients
     for i in range(len(session_names)):
         name = request.form.get(session_names[i])
         quantity = request.form.get(session_quan[i])
         if (session['units'] == "Metric"):
-            units = request.form.get(session_metric[i])
+            measure = request.form.get(session_metric[i])
+            converted = (convert_units("Metric", quantity, measure))
         else:
-            units = request.form.get(session_imperial[i])
-        ingredients += str(name) + ", " + str(quantity) + ", " + str(units) + "\n"
+            measure = request.form.get(session_imperial[i])
+            converted = (convert_units("Imperial", quantity, measure))
+        ingredients += str(name) + ", " + str(quantity) + ", " + str(measure) + "\n"
+        converted_ingredients += str(name) + ", " + str(converted) + "\n"
+        
+    
+    
 
 
-    new_post = Post(post_name=post_name, user_id = 1, units=units, ingredients=ingredients , recipe=recipe)
+    new_post = Post(post_name=post_name, user_id = 1, units=units, ingredients=ingredients, converted_ingredients=converted_ingredients, recipe=recipe)
     db.session.add(new_post)
     db.session.commit()
     return redirect(url_for("explore_page"))
@@ -355,3 +362,29 @@ def logout_page():
     logout_user()
     flash("You have been logged out.")
     return redirect(url_for("get_login"))
+
+def convert_units(units, quantity, meausure):
+    if units == "Metric":
+        # for units in ingredients.split("\n"):
+        if (meausure == "ml"):
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'ml', 'cup').doconvert(), 2)
+                print(convert)
+                return (str(convert) + ", " + "cup")
+        if (meausure == "l"):
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'l', 'cup').doconvert(), 2)
+                print(convert)
+                return (str(convert) + ", " + "cup")
+        if (meausure == "mg"):
+                convert = round(massunits.MassUnit(int(quantity), 'mg', 'oz').doconvert(), 2)
+                return (str(convert) + ", " + "oz")
+        if (meausure == "g"): 
+                convert = round(massunits.MassUnit(int(quantity), 'g', 'oz').doconvert(), 2)
+                return (str(convert) + ", " + "oz")
+        if (meausure == "kg"):
+                convert = round(massunits.MassUnit(int(quantity), 'kg', 'lb').doconvert(), 2)
+                return (str(convert) + ", " + "lb")
+        if (meausure == "None"):
+                return (meausure + ", " + quantity)
+    if units == "Imperial":
+        #TODO: Implement the imperial side (same as above just in reverse)
+        pass
