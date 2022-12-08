@@ -44,6 +44,7 @@ class Post(db.Model):
     units = db.Column(db.Unicode, nullable=False)
     ingredients = db.Column(db.Unicode, nullable=False)
     recipe = db.Column(db.Unicode, nullable=False)
+    numlikes = db.Column(db.Integer, nullable=False)
     def tojson(self):
         post_comments = Comment.query.filter_by(post_id=self.id).all()
         total = 0
@@ -57,6 +58,7 @@ class Post(db.Model):
             "user_id": self.user_id,
             "ingredients": self.ingredients,
             "recipe": self.recipe,
+            "numlikes": self.numlikes,
             "userinfo": User.query.get(self.user_id).tojson(),
             "rating": total,
             "numcomments": len(post_comments)
