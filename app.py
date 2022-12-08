@@ -327,10 +327,13 @@ def user_json_dump(userid):
 @app.route("/explore/")
 @app.route("/explore/<int:postid>/")
 def explore_page(postid=0):
+    logged_in = False
+    if 'userid' in session.keys():
+        logged_in = True
     if (postid == 0): #TODO: If there is no postid, then display the page with AJAX
         #TODO ADD AJAX, FOR MIDPOINT WE WILL JUST DISPLAY STUFF HERE
         all_posts = Post.query.order_by(Post.id).all()
-        return render_template("homepage.html", posts=all_posts)
+        return render_template("homepage.html", posts=all_posts, logged_in=logged_in)
     #TODO: Then display the actual post itself in full-view mode
     selected_post = Post.query.get(postid)
     original_poster = User.query.get(selected_post.user_id)
@@ -346,7 +349,7 @@ def explore_json():
 @app.route("/logout/")
 @login_required
 def logout_page():
-    session["userid"] = None
+    del session["userid"]
     logout_user()
     flash("You have been logged out.")
     return redirect(url_for("get_login"))
