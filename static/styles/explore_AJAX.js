@@ -1,34 +1,39 @@
 document.addEventListener("DOMContentLoaded", async () => {
     loadPosts();
 
-    const searchBar = document.getElementById("input");
-    searchBar.addEventListener("keyup", (event) => {
-        if (event.key === "Enter") {
-            searchBarResponse();
-        }
-    });
     const searchButton = document.getElementById("search-button");
     searchButton.addEventListener("click", searchBarResponse);
 });
 
 async function loadPosts() {
     const infoDir = "/explore/postjsondump/";
-    const insertElement = document.getElementById("allpost-feed");
     const searchQuery = document.getElementById("get-search-query").getAttribute("data");
 
     fetch(infoDir)
         .then(validateJSON)
         .then(data => {
-            for (const post of data) {
-                console.log(searchQuery)
-                if ((post.recipe.toUpperCase()).includes(searchQuery.toUpperCase()) || (post.post_name.toUpperCase()).includes(searchQuery.toUpperCase())) {
-                    insertPost(post);
+            if (data.length != 0) {
+                for (const post of data) {
+                    console.log(searchQuery)
+                    if ((post.recipe.toUpperCase()).includes(searchQuery.toUpperCase()) || (post.post_name.toUpperCase()).includes(searchQuery.toUpperCase())) {
+                        insertPost(post);
+                    }
                 }
+            }
+            else {
+                const postContainer = document.getElementById("allpost-feed");
+                const para = document.createElement("p");
+                para.innerText = "No posts found with that tag.";
+
+                const card = document.createElement('div');
+                card.setAttribute("class", "card pb-2");
+                card.setAttribute("id", "post");
+                postContainer.append(card, document.createElement("br"));
+            }
                 //Insert each post's info here
                 //insertElement is the div which each post will be added (I gave it a unique ID)
                 //Make sure to put the title, username, rating, and a sample of the recipe in the AJAX preview
                 //Have it so clicking on the post preview will link to /explore/<post_id>/ (Ask me if you have trouble)
-            }
         })
         .catch(error => {console.log(`Error occurred - ${error}`)})
 }
@@ -101,7 +106,7 @@ function insertPost(post){
 
 function searchBarResponse() {
     const searchBar = document.getElementById("input").value;
-    window.location = "/explore?search=" + searchBar;
+    window.location = "/explore/?search=" + searchBar;
 }
 
 function validateJSON(response) {

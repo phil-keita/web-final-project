@@ -284,30 +284,6 @@ def post_post():
     db.session.commit()
     return redirect(url_for("explore_page"))
 
-@app.get("/comment/")
-@login_required
-def get_comment():
-    form = Comment_Form()
-    return render_template("comment.html", form=form)
-
-@app.post("/comment/")
-@login_required
-def post_required():
-    form = Comment_Form()
-
-    if not form.validate():
-        for field,error in form.errors.items():
-            flash(f"{field} - {error}")
-        return redirect(url_for("get_comment"))
-
-    #post id here
-    #user id here
-    text = form.text.data
-    rating = form.rating.data
-    new_comment = Comment(post_id=1, user_id=1, text=text, rating=rating)
-    db.session.add(new_comment)
-    db.session.commit()
-
 @app.route("/profile/")
 @login_required
 def user_profile():
