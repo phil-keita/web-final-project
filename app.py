@@ -367,15 +367,15 @@ def add_new_comment(postid):
     db.session.commit()
     return "Comment added successfully.", 201
 
-@app.route("/explore/postjsondump/")
+@app.get("/explore/postjsondump/")
 def explore_json():
     all_posts = Post.query.order_by(desc(Post.id)).all()
-    return [i.tojson for i in all_posts]
+    return [i.tojson() for i in all_posts]
 
 @app.route("/explore/<int:postid>/commentjsondump/")
 def all_comment_json(postid):
     all_postcomments = Comment.query.filter_by(post_id=postid).order_by(desc(Comment.id)).all()
-    return [i.tojson for i in all_postcomments]
+    return [i.tojson() for i in all_postcomments]
 
 @app.route("/logout/")
 @login_required
