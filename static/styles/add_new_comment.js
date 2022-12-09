@@ -37,7 +37,7 @@ function insertComment(comment) {
 }
 
 async function postComment() {
-    const postid = document.getElementById("post-id").postid;
+    const postid = document.getElementById("post-id").getAttribute("postid");
     const postComment = `/explore/${postid}/addcomment/`;
     const text = document.getElementById("comment-value").value; //TEXT FIELD
     const rating = document.getElementById("rating-value").value; //RATING FIELD
