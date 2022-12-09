@@ -348,8 +348,10 @@ def explore_page(postid=0):
         logged_in = True
     if (postid == 0): #TODO: If there is no postid, then display the page with AJAX
         #TODO ADD AJAX, FOR MIDPOINT WE WILL JUST DISPLAY STUFF HERE
+        searchbar = request.args.get("search", default="", type=str)
         all_posts = Post.query.order_by(Post.id).all()
-        return render_template("homepage.html", posts=all_posts, logged_in=logged_in)
+
+        return render_template("homepage.html", posts=all_posts, logged_in=logged_in, search=searchbar)
     #TODO: Then display the actual post itself in full-view mode
     selected_post = Post.query.get(postid)
     original_poster = User.query.get(selected_post.user_id)

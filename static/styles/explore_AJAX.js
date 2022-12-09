@@ -1,17 +1,22 @@
 document.addEventListener("DOMContentLoaded", async () => {
     loadPosts();
+
+    const searchButton = document.getElementById("search-button");
+    searchButton.addEventListener("click", postComment);
 });
 
 async function loadPosts() {
-    const infoDir = "http://127.0.0.1:5000/explore/postjsondump/";
-    const insertElement = document.getElementById("allpost-feed")
+    const infoDir = "/explore/postjsondump/";
+    const insertElement = document.getElementById("allpost-feed");
+    const searchQuery = document.getElementById("get-search-query").getAttribute("data");
 
     fetch(infoDir)
         .then(validateJSON)
         .then(data => {
             for (const post of data) {
-                insertPost(post);
-
+                if (post.text.includes() || post.title.includes()) {
+                    insertPost(post);
+                }
                 //Insert each post's info here
                 //insertElement is the div which each post will be added (I gave it a unique ID)
                 //Make sure to put the title, username, rating, and a sample of the recipe in the AJAX preview
@@ -79,15 +84,11 @@ function insertPost(post){
     ingredientParagraph.setAttribute("class", "card-text");
     cardBody.append(ingredientParagraph);
     const ingredientList = document.createElement("ul");
-    
+}
 
-    
-    
-
-
-
-
-
+function searchBarResponse() {
+    const searchBar = document.getElementById("input").value;
+    window.location = "/explore?search=" + searchBar;
 }
 
 function validateJSON(response) {
