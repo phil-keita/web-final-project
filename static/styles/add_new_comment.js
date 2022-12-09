@@ -1,7 +1,7 @@
 window.addEventListener("DOMContentLoaded", function() {
     loadComments();
 
-    const commentButton = document.getElementById("comment-button");
+    const commentButton = document.getElementById("add-button");
     commentButton.addEventListener("click", postComment);
 });
 

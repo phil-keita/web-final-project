@@ -61,7 +61,7 @@ class Post(db.Model):
             "user_id": self.user_id,
             "ingredients": self.ingredients,
             "recipe": self.recipe,
-            "numlikes": self.numlikes,
+            # "numlikes": self.numlikes,
             "userinfo": User.query.get(self.user_id).tojson(),
             "rating": total,
             "numcomments": len(post_comments)
