@@ -419,20 +419,20 @@ def convert_units(units, quantity, meausure):
                 print(convert)
                 return (str(convert) + ", " + "ml")
         if (meausure == "mg"):
-                convert = round(massunits.MassUnit(int(quantity), 'floz', 'ml').doconvert(), 2)
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'floz', 'ml').doconvert(), 2)
                 return (str(convert) + ", " + "ml")
         if (meausure == "g"): 
-                convert = round(massunits.MassUnit(int(quantity), 'cup', 'ml').doconvert(), 2)
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'cup', 'ml').doconvert(), 2)
                 return (str(convert) + ", " + "ml")
         if (meausure == "kg"):
-                convert = round(massunits.MassUnit(int(quantity), 'gal', 'l').doconvert(), 2)
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'gal', 'l').doconvert(), 2)
                 return (str(convert) + ", " + "l")
         if (meausure == "tsp"):
-                convert = round(volumeunits.VolumeUnit(int(quantity), 'oz', 'g').doconvert(), 2)
+                convert = round(massunits.MassUnit(int(quantity), 'oz', 'g').doconvert(), 2)
                 print(convert)
                 return (str(convert) + ", " + "g")
         if (meausure == "l"):
-                convert = round(volumeunits.VolumeUnit(int(quantity), 'lb', 'kg').doconvert(), 2)
+                convert = round(massunits.MassUnit(int(quantity), 'lb', 'kg').doconvert(), 2)
                 print(convert)
                 return (str(convert) + ", " + "kg")
         if (meausure == "None"):
