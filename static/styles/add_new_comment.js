@@ -25,10 +25,10 @@ function insertComment(comment) {
     div.classList.add("comment");
 
     const username = document.createElement("h4");
-    username.innerText = comment.postinfo.userinfo.username;
+    username.innerText = comment.userinfo.username;
 
     const rating = document.createElement("h4");
-    rating.innerText = comment.rating;
+    rating.innerText = comment.rating + " Stars";
 
     const text = document.createElement("p");
     text.innerText = comment.text;
