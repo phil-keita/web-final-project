@@ -1,8 +1,14 @@
 document.addEventListener("DOMContentLoaded", async () => {
     loadPosts();
 
+    const searchBar = document.getElementById("input");
+    searchBar.addEventListener("keyup", (event) => {
+        if (event.key === "Enter") {
+            searchBarResponse();
+        }
+    });
     const searchButton = document.getElementById("search-button");
-    searchButton.addEventListener("click", postComment);
+    searchButton.addEventListener("click", searchBarResponse);
 });
 
 async function loadPosts() {
@@ -14,7 +20,8 @@ async function loadPosts() {
         .then(validateJSON)
         .then(data => {
             for (const post of data) {
-                if (post.text.includes() || post.title.includes()) {
+                console.log(searchQuery)
+                if ((post.recipe.toUpperCase()).includes(searchQuery.toUpperCase()) || (post.post_name.toUpperCase()).includes(searchQuery.toUpperCase())) {
                     insertPost(post);
                 }
                 //Insert each post's info here
