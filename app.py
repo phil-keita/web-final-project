@@ -61,7 +61,7 @@ class Post(db.Model):
             "user_id": self.user_id,
             "ingredients": self.ingredients,
             "recipe": self.recipe,
-            "numlikes": self.numlikes,
+            # "numlikes": self.numlikes,
             "userinfo": User.query.get(self.user_id).tojson(),
             "rating": total,
             "numcomments": len(post_comments)
@@ -350,10 +350,25 @@ def explore_page(postid=0):
         return render_template("view_post.html", post=selected_post.tojson(), user=original_poster.tojson())
     return "This post does not exist.", 404
 
+@app.post("/explore/<int:postid>/addcomment/")
+@login_required
+def add_new_comment(postid):
+    # THIS IS WHERE THE JS WILL SEND A POST TO ADD A NEW COMMENT
+    get_commentjson = request.get_json()
+    new_comment = Comment(post_id=postid, text=get_commentjson.text, rating=get_commentjson.rating, user_id=session["userid"])
+    db.session.add(new_comment)
+    db.session.commit()
+    return "Comment added successfully.", 201
+
 @app.route("/explore/postjsondump/")
 def explore_json():
     all_posts = Post.query.order_by(desc(Post.id)).all()
     return [i.tojson for i in all_posts]
+
+@app.route("/explore/<int:postid>/commentjsondump/")
+def all_comment_json(postid):
+    all_postcomments = Comment.query.filter_by(post_id=postid).order_by(desc(Comment.id)).all()
+    return [i.tojson for i in all_postcomments]
 
 @app.route("/logout/")
 @login_required
