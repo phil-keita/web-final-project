@@ -150,6 +150,7 @@ def post_register(): #TODO: REGISTER PAGE
     #    return redirect(url_for("get_register"))
 
     username = form.username.data
+    session['user'] = username
     email = form.email.data
     password = form.password.data
     new_user = User(username=username, email=email, password=password) 
@@ -238,6 +239,11 @@ def post_post():
             flash(f"{field} - {error}")
         return redirect(url_for("get_post"))
    
+    user = session['user']
+    grab_user = User.query.filter_by(username=user).first()
+    user_id = grab_user.id
+    
+
     session_names = session['ingredients']
     session_quan = session['quantities']
     session_metric = session['metric']
@@ -273,7 +279,7 @@ def post_post():
     
 
 
-    new_post = Post(post_name=post_name, user_id = 1, units=units, ingredients=ingredients, converted_ingredients=converted_ingredients, recipe=recipe)
+    new_post = Post(post_name=post_name, user_id = user_id, units=units, ingredients=ingredients, converted_ingredients=converted_ingredients, recipe=recipe)
     db.session.add(new_post)
     db.session.commit()
     return redirect(url_for("explore_page"))
@@ -316,7 +322,8 @@ def profile_view(userid):  # VIEWING A PERSON'S PROFILE PAGE WITH ALL OF THEIR R
 @app.route("/profile/<int:userid>/posts/")  # VIEWING ALL POSTS OF THE USER
 def profile_posts(userid):
     profile_user = User.query.filter_by(id=userid).first()
-    return render_template("allposts.html", user=profile_user)
+    posts = Post.query.filter_by(user_id=userid).all()
+    return render_template("allposts.html", user=profile_user, posts=posts)
 
 @app.route("/profile/<int:userid>/comments/") # VIEWING ALL COMMENTS OF THE USER
 def profile_comments(userid):
