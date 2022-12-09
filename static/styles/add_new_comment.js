@@ -8,6 +8,7 @@ window.addEventListener("DOMContentLoaded", function() {
 async function loadComments() {
     const postid = document.getElementById("post-id").getAttribute("postid");
     const getComments = `/explore/${postid}/commentjsondump/`;
+    console.log("GOT HERE JUST FINE")
     fetch(getComments)
         .then(validateJSON)
         .then(data => {
@@ -15,6 +16,7 @@ async function loadComments() {
                 insertComment(comment);
             }
         });
+    console.log("TESTING")
 }
 
 function insertComment(comment) {
@@ -52,8 +54,7 @@ async function postComment() {
             "text": text
         })
     })
-        .then(validateJSON)
-        .then(insertComment)
+    window.location.reload()
 }
 
  function validateJSON(response) {

@@ -81,7 +81,7 @@ class Comment(db.Model):
             "user_id": self.user_id,
             "text": self.text,
             "rating": self.rating,
-            "postinfo": (Post.query.get(self.post_id)).tojson()
+            "postinfo": Post.query.get(self.post_id).tojson()
         }
 
 with app.app_context():
@@ -91,9 +91,10 @@ with app.app_context():
     philippe = User(username = "philippe_", email="phillewis16@gmail.com", password="Phillewis16")
     post1 = Post(post_name="Lasagna", user_id=1, units="Metric", ingredients="egg, 2, None ", converted_ingredients = "egg, None, 2 ", recipe = "Do THis \n then do this")
     post2 = Post(post_name="Yes", user_id=1, units="Metric", ingredients="egg, 2, None ", converted_ingredients = "egg, None, 2 ", recipe = "Do THis \n then do this")
-    db.add(philippe)
-    db.add_all(post1, post2)
-    db.commit()
+    db.session.add(philippe)
+    db.session.add(post1)
+    db.session.add(post2)
+    db.session.commit()
 
 @app.route("/")
 def index(): #TODO: HOMEPAGE
@@ -354,7 +355,7 @@ def explore_page(postid=0):
     selected_post = Post.query.get(postid)
     original_poster = User.query.get(selected_post.user_id)
     if (selected_post != None):
-        return render_template("view_post.html", post=selected_post.tojson(), user=original_poster.tojson())
+        return render_template("view_post.html", post=selected_post.tojson(), user=original_poster.tojson(), logbool=logged_in)
     return "This post does not exist.", 404
 
 @app.post("/explore/<int:postid>/addcomment/")
