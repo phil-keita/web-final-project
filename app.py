@@ -91,9 +91,7 @@ with app.app_context():
     philippe = User(username = "philippe_", email="phillewis16@gmail.com", password="Phillewis16")
     post1 = Post(post_name="Lasagna", user_id=1, units="Metric", ingredients="egg, 2, None ", converted_ingredients = "egg, None, 2 ", recipe = "Do THis \n then do this")
     post2 = Post(post_name="Yes", user_id=1, units="Metric", ingredients="egg, 2, None ", converted_ingredients = "egg, None, 2 ", recipe = "Do THis \n then do this")
-    db.session.add(philippe)
-    db.session.add(post1)
-    db.session.add(post2)
+    db.session.add_all((post1, post2, philippe))
     db.session.commit()
 
 @app.route("/")
@@ -369,15 +367,15 @@ def add_new_comment(postid):
     db.session.commit()
     return "Comment added successfully.", 201
 
-@app.route("/explore/postjsondump/")
+@app.get("/explore/postjsondump/")
 def explore_json():
     all_posts = Post.query.order_by(desc(Post.id)).all()
-    return [i.tojson for i in all_posts]
+    return [i.tojson() for i in all_posts]
 
 @app.route("/explore/<int:postid>/commentjsondump/")
 def all_comment_json(postid):
     all_postcomments = Comment.query.filter_by(post_id=postid).order_by(desc(Comment.id)).all()
-    return [i.tojson for i in all_postcomments]
+    return [i.tojson() for i in all_postcomments]
 
 @app.route("/logout/")
 @login_required
@@ -411,4 +409,31 @@ def convert_units(units, quantity, meausure):
                 return (meausure + ", " + quantity)
     if units == "Imperial":
         #TODO: Implement the imperial side (same as above just in reverse)
+        if (meausure == "tsp"):
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'tsp', 'ml').doconvert(), 2)
+                print(convert)
+                return (str(convert) + ", " + "ml")
+        if (meausure == "l"):
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'tbsp', 'ml').doconvert(), 2)
+                print(convert)
+                return (str(convert) + ", " + "ml")
+        if (meausure == "mg"):
+                convert = round(massunits.MassUnit(int(quantity), 'floz', 'ml').doconvert(), 2)
+                return (str(convert) + ", " + "ml")
+        if (meausure == "g"): 
+                convert = round(massunits.MassUnit(int(quantity), 'cup', 'ml').doconvert(), 2)
+                return (str(convert) + ", " + "ml")
+        if (meausure == "kg"):
+                convert = round(massunits.MassUnit(int(quantity), 'gal', 'l').doconvert(), 2)
+                return (str(convert) + ", " + "l")
+        if (meausure == "tsp"):
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'oz', 'g').doconvert(), 2)
+                print(convert)
+                return (str(convert) + ", " + "g")
+        if (meausure == "l"):
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'lb', 'kg').doconvert(), 2)
+                print(convert)
+                return (str(convert) + ", " + "kg")
+        if (meausure == "None"):
+                return (meausure + ", " + quantity)
         pass
