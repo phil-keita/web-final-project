@@ -73,7 +73,7 @@ class Comment(db.Model):
     post_id = db.Column(db.Unicode, db.ForeignKey('Posts.id'))
     user_id = db.Column(db.Unicode, db.ForeignKey('Users.id'))
     text = db.Column(db.Unicode, nullable=False)
-    rating = db.Column(db.Unicode, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
     def tojson(self):
         return {
             "id": self.id,
@@ -87,6 +87,13 @@ class Comment(db.Model):
 with app.app_context():
     db.drop_all()
     db.create_all()
+    #Creatin users i can use when testing as well a couple posts
+    philippe = User(username = "philippe_", email="phillewis16@gmail.com", password="Phillewis16")
+    post1 = Post(post_name="Lasagna", user_id=1, units="Metric", ingredients="egg, 2, None ", converted_ingredients = "egg, None, 2 ", recipe = "Do THis \n then do this")
+    post2 = Post(post_name="Yes", user_id=1, units="Metric", ingredients="egg, 2, None ", converted_ingredients = "egg, None, 2 ", recipe = "Do THis \n then do this")
+    db.add(philippe)
+    db.add_all(post1, post2)
+    db.commit()
 
 @app.route("/")
 def index(): #TODO: HOMEPAGE
@@ -355,7 +362,8 @@ def explore_page(postid=0):
 def add_new_comment(postid):
     # THIS IS WHERE THE JS WILL SEND A POST TO ADD A NEW COMMENT
     get_commentjson = request.get_json()
-    new_comment = Comment(post_id=postid, text=get_commentjson.text, rating=get_commentjson.rating, user_id=session["userid"])
+    # print(get_commentjson)
+    new_comment = Comment(post_id=postid, text=get_commentjson.get("rating"), rating=int(get_commentjson.get("rating")), user_id=session["userid"])
     db.session.add(new_comment)
     db.session.commit()
     return "Comment added successfully.", 201
