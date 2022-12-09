@@ -88,6 +88,7 @@ function insertPost(post){
     titlehead.setAttribute('class', 'card-title');
     title.innerText = post.post_name;
     title.setAttribute("href", `/explore/${post.id}/`);
+    title.setAttribute("class", "username");
     titlehead.appendChild(title);
     cardBody.append(titlehead, document.createElement("hr"));
     //Ingredients
