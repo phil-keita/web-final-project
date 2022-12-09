@@ -37,11 +37,13 @@
         <hr>
     </div>
     <!-- ADD A WAY TO COMMENT AND RATE THE POST HERE -->
+    {% if logbool==true %}
     <div id="add-new-comments">
         <input type="text" size="50" id="comment-value">
         <input type="number" id="rating-value" min="1" max="5">
         <input type="button" id="add-button" value="Add Comment">
     </div>
+    {% endif %}
     <div id="comment-section">
 
     </div>

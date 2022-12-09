@@ -81,7 +81,8 @@ class Comment(db.Model):
             "user_id": self.user_id,
             "text": self.text,
             "rating": self.rating,
-            "postinfo": (Post.query.get(self.post_id)).tojson()
+            "postinfo": Post.query.get(self.post_id).tojson(),
+            "userinfo": User.query.get(self.user_id).tojson()
         }
 
 with app.app_context():
@@ -353,7 +354,7 @@ def explore_page(postid=0):
     selected_post = Post.query.get(postid)
     original_poster = User.query.get(selected_post.user_id)
     if (selected_post != None):
-        return render_template("view_post.html", post=selected_post.tojson(), user=original_poster.tojson())
+        return render_template("view_post.html", post=selected_post.tojson(), user=original_poster.tojson(), logbool=logged_in)
     return "This post does not exist.", 404
 
 @app.post("/explore/<int:postid>/addcomment/")
@@ -362,7 +363,7 @@ def add_new_comment(postid):
     # THIS IS WHERE THE JS WILL SEND A POST TO ADD A NEW COMMENT
     get_commentjson = request.get_json()
     # print(get_commentjson)
-    new_comment = Comment(post_id=postid, text=get_commentjson.get("rating"), rating=int(get_commentjson.get("rating")), user_id=session["userid"])
+    new_comment = Comment(post_id=postid, text=get_commentjson.get("text"), rating=int(get_commentjson.get("rating")), user_id=session.get("userid"))
     db.session.add(new_comment)
     db.session.commit()
     return "Comment added successfully.", 201
