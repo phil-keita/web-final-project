@@ -162,8 +162,11 @@ def post_register(): #TODO: REGISTER PAGE
 @app.get("/ingredients/")
 @login_required
 def get_pre_post():
+    logged_in = False
+    if 'userid' in session.keys():
+        logged_in = True
     form = PrePostForm()
-    return render_template("prepost.html", form=form)
+    return render_template("prepost.html", form=form, logged_in=logged_in)
 
 
 @app.post("/ingredients/")
@@ -187,6 +190,9 @@ def post_pre_post():
 @app.get("/post/")
 @login_required
 def get_post():
+    logged_in = False
+    if 'userid' in session.keys():
+        logged_in = True
     if(session['is_submitted'] == "True"):
         session['is_submitted'] = "False"
         form = Post_Form()
@@ -225,7 +231,7 @@ def get_post():
 
     # if (pre_form.is_submitted() == False):
         # return redirect(url_for("get_pre_post"))
-        return render_template("post.html", form=form, num=num, units=units, ingredient=ingredient)
+        return render_template("post.html", form=form, num=num, units=units, ingredient=ingredient, logged_in=logged_in)
     else:
         return redirect(url_for("get_pre_post"))
     

@@ -60,6 +60,7 @@ function insertPost(post){
     img.setAttribute('id',"profile-pic");
     img.setAttribute("src", "/static/styles/images/profile_pic.jpg");
     profileDiv.append(img);
+
     //username display
     const usernameDiv = document.createElement("div");
     usernameDiv.setAttribute('class','col pt-2');
@@ -82,6 +83,7 @@ function insertPost(post){
     cardBody.setAttribute('class', 'card-body');
     cardBody.setAttribute('id', 'post-content');
     card.append(cardBody);
+
     //Title
     const titlehead = document.createElement('h5');
     const title = document.createElement("a");
@@ -90,7 +92,10 @@ function insertPost(post){
     title.setAttribute("href", `/explore/${post.id}/`);
     title.setAttribute("class", "username");
     titlehead.appendChild(title);
-    cardBody.append(titlehead, document.createElement("hr"));
+    const postRating = document.createElement("h6");
+    postRating.innerText = post.rating + " Stars";
+    cardBody.append(titlehead, document.createElement("hr"), postRating, document.createElement("hr"));
+
     //Ingredients
     const ingredientTitle = document.createElement("h6");
     ingredientTitle.setAttribute('class', 'card-title');
