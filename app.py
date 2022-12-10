@@ -81,7 +81,8 @@ class Comment(db.Model):
             "user_id": self.user_id,
             "text": self.text,
             "rating": self.rating,
-            "postinfo": (Post.query.get(self.post_id)).tojson()
+            "postinfo": Post.query.get(self.post_id).tojson(),
+            "userinfo": User.query.get(self.user_id).tojson()
         }
 
 with app.app_context():
@@ -91,9 +92,8 @@ with app.app_context():
     philippe = User(username = "philippe_", email="phillewis16@gmail.com", password="Phillewis16")
     post1 = Post(post_name="Lasagna", user_id=1, units="Metric", ingredients="egg, 2, None ", converted_ingredients = "egg, None, 2 ", recipe = "Do THis \n then do this")
     post2 = Post(post_name="Yes", user_id=1, units="Metric", ingredients="egg, 2, None ", converted_ingredients = "egg, None, 2 ", recipe = "Do THis \n then do this")
-    db.add(philippe)
-    db.add_all(post1, post2)
-    db.commit()
+    db.session.add_all((post1, post2, philippe))
+    db.session.commit()
 
 @app.route("/")
 def index(): #TODO: HOMEPAGE
@@ -150,6 +150,7 @@ def post_register(): #TODO: REGISTER PAGE
     #    return redirect(url_for("get_register"))
 
     username = form.username.data
+    session['user'] = username
     email = form.email.data
     password = form.password.data
     new_user = User(username=username, email=email, password=password) 
@@ -238,6 +239,11 @@ def post_post():
             flash(f"{field} - {error}")
         return redirect(url_for("get_post"))
    
+    user = session['user']
+    grab_user = User.query.filter_by(username=user).first()
+    user_id = grab_user.id
+    
+
     session_names = session['ingredients']
     session_quan = session['quantities']
     session_metric = session['metric']
@@ -273,34 +279,10 @@ def post_post():
     
 
 
-    new_post = Post(post_name=post_name, user_id = 1, units=units, ingredients=ingredients, converted_ingredients=converted_ingredients, recipe=recipe)
+    new_post = Post(post_name=post_name, user_id = user_id, units=units, ingredients=ingredients, converted_ingredients=converted_ingredients, recipe=recipe)
     db.session.add(new_post)
     db.session.commit()
     return redirect(url_for("explore_page"))
-
-@app.get("/comment/")
-@login_required
-def get_comment():
-    form = Comment_Form()
-    return render_template("comment.html", form=form)
-
-@app.post("/comment/")
-@login_required
-def post_required():
-    form = Comment_Form()
-
-    if not form.validate():
-        for field,error in form.errors.items():
-            flash(f"{field} - {error}")
-        return redirect(url_for("get_comment"))
-
-    #post id here
-    #user id here
-    text = form.text.data
-    rating = form.rating.data
-    new_comment = Comment(post_id=1, user_id=1, text=text, rating=rating)
-    db.session.add(new_comment)
-    db.session.commit()
 
 @app.route("/profile/")
 @login_required
@@ -316,7 +298,8 @@ def profile_view(userid):  # VIEWING A PERSON'S PROFILE PAGE WITH ALL OF THEIR R
 @app.route("/profile/<int:userid>/posts/")  # VIEWING ALL POSTS OF THE USER
 def profile_posts(userid):
     profile_user = User.query.filter_by(id=userid).first()
-    return render_template("allposts.html", user=profile_user)
+    posts = Post.query.filter_by(user_id=userid).all()
+    return render_template("allposts.html", user=profile_user, posts=posts)
 
 @app.route("/profile/<int:userid>/comments/") # VIEWING ALL COMMENTS OF THE USER
 def profile_comments(userid):
@@ -348,13 +331,15 @@ def explore_page(postid=0):
         logged_in = True
     if (postid == 0): #TODO: If there is no postid, then display the page with AJAX
         #TODO ADD AJAX, FOR MIDPOINT WE WILL JUST DISPLAY STUFF HERE
+        searchbar = request.args.get("search", default="", type=str)
         all_posts = Post.query.order_by(Post.id).all()
-        return render_template("homepage.html", posts=all_posts, logged_in=logged_in)
+
+        return render_template("homepage.html", posts=all_posts, logged_in=logged_in, search=searchbar)
     #TODO: Then display the actual post itself in full-view mode
     selected_post = Post.query.get(postid)
     original_poster = User.query.get(selected_post.user_id)
     if (selected_post != None):
-        return render_template("view_post.html", post=selected_post.tojson(), user=original_poster.tojson())
+        return render_template("view_post.html", post=selected_post.tojson(), user=original_poster.tojson(), logbool=logged_in)
     return "This post does not exist.", 404
 
 @app.post("/explore/<int:postid>/addcomment/")
@@ -363,20 +348,20 @@ def add_new_comment(postid):
     # THIS IS WHERE THE JS WILL SEND A POST TO ADD A NEW COMMENT
     get_commentjson = request.get_json()
     # print(get_commentjson)
-    new_comment = Comment(post_id=postid, text=get_commentjson.get("rating"), rating=int(get_commentjson.get("rating")), user_id=session["userid"])
+    new_comment = Comment(post_id=postid, text=get_commentjson.get("text"), rating=int(get_commentjson.get("rating")), user_id=session.get("userid"))
     db.session.add(new_comment)
     db.session.commit()
     return "Comment added successfully.", 201
 
-@app.route("/explore/postjsondump/")
+@app.get("/explore/postjsondump/")
 def explore_json():
     all_posts = Post.query.order_by(desc(Post.id)).all()
-    return [i.tojson for i in all_posts]
+    return [i.tojson() for i in all_posts]
 
 @app.route("/explore/<int:postid>/commentjsondump/")
 def all_comment_json(postid):
     all_postcomments = Comment.query.filter_by(post_id=postid).order_by(desc(Comment.id)).all()
-    return [i.tojson for i in all_postcomments]
+    return [i.tojson() for i in all_postcomments]
 
 @app.route("/logout/")
 @login_required
