@@ -10,21 +10,30 @@ async function loadPostPreview() {
     fetch(infoDir)
         .then(validateJSON)
         .then(data => {
-            for (let i=0; i<4; i++) {
+            for (let i = 0; i < 4; i++) {
                 if (!(typeof data.posts[i] == "undefined")) {
+
+                    const username = document.getElementById("user");
+                    username.innerText = document.getElementById("title").innerText;
+                    const img = document.createElement("img");
+                    img.setAttribute('id', "profile-pic");
+                    img.setAttribute("src", "/static/styles/images/chef_profile_pic.jpg");
+                    username.append(img);
+
+
                     const postContainer = document.getElementById("post-div");
                     //card
                     const card = document.createElement('div');
                     card.setAttribute("class", "card pb-2");
                     card.setAttribute("id", "post");
                     postContainer.append(card, document.createElement("br"));
-                    
+
                     //header
                     const header = document.createElement('div');
                     header.setAttribute('class', "row pt-3");
                     header.setAttribute('style', "margin-left: 5px;");
                     card.append(header);
-                
+
                     //Card Body
                     const cardBody = document.createElement("div");
                     cardBody.setAttribute('class', 'card-body');
@@ -57,7 +66,7 @@ async function loadPostPreview() {
                 }
             }
         })
-        .catch(error => {console.log(`Error occurred: ${error}`)})
+        .catch(error => { console.log(`Error occurred: ${error}`) })
 }
 
 async function loadCommentPreview() {
@@ -68,7 +77,7 @@ async function loadCommentPreview() {
     fetch(infoDir)
         .then(validateJSON)
         .then(data => {
-            for (let i=0; i<4; i++) {
+            for (let i = 0; i < 4; i++) {
                 if (!(typeof data.comments[i] == "undefined")) {
                     const postContainer = document.getElementById("comment-div");
 
@@ -77,13 +86,13 @@ async function loadCommentPreview() {
                     card.setAttribute("class", "card pb-2");
                     card.setAttribute("id", "post");
                     postContainer.append(card, document.createElement("br"));
-                    
+
                     //header
                     const header = document.createElement('div');
                     header.setAttribute('class', "row pt-3");
                     header.setAttribute('style', "margin-left: 5px;");
                     card.append(header);
-                
+
                     //Card Body
                     const cardBody = document.createElement("div");
                     cardBody.setAttribute('class', 'card-body');
@@ -104,7 +113,7 @@ async function loadCommentPreview() {
                     const commParagraph = document.createElement("p");
                     commParagraph.setAttribute("class", "card-text");
                     if (data.comments[i].text.length > 50) {
-                        commParagraph.innerText = data.comments[i].text.slice(0,50) + "...";
+                        commParagraph.innerText = data.comments[i].text.slice(0, 50) + "...";
                     }
                     else {
                         commParagraph.innerText = data.comments[i].text;
@@ -121,7 +130,7 @@ async function loadCommentPreview() {
             const hr = document.createElement("hr");
             commentDiv.appendChild(hr);
         })
-        .catch(error => {console.log(`Error occurred: ${error}`)})
+        .catch(error => { console.log(`Error occurred: ${error}`) })
 }
 
 function validateJSON(response) {
