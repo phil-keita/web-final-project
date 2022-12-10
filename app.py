@@ -60,6 +60,7 @@ class Post(db.Model):
             "post_name": self.post_name,
             "user_id": self.user_id,
             "ingredients": self.ingredients,
+            "converted_ingredients": self.converted_ingredients,
             "recipe": self.recipe,
             # "numlikes": self.numlikes,
             "userinfo": User.query.get(self.user_id).tojson(),
@@ -412,25 +413,25 @@ def convert_units(units, quantity, meausure):
                 convert = round(volumeunits.VolumeUnit(int(quantity), 'tsp', 'ml').doconvert(), 2)
                 print(convert)
                 return (str(convert) + ", " + "ml")
-        if (meausure == "l"):
+        if (meausure == "tbsp"):
                 convert = round(volumeunits.VolumeUnit(int(quantity), 'tbsp', 'ml').doconvert(), 2)
                 print(convert)
                 return (str(convert) + ", " + "ml")
-        if (meausure == "mg"):
-                convert = round(massunits.MassUnit(int(quantity), 'floz', 'ml').doconvert(), 2)
+        if (meausure == "floz"):
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'floz', 'ml').doconvert(), 2)
                 return (str(convert) + ", " + "ml")
-        if (meausure == "g"): 
-                convert = round(massunits.MassUnit(int(quantity), 'cup', 'ml').doconvert(), 2)
+        if (meausure == "cup"): 
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'cup', 'ml').doconvert(), 2)
                 return (str(convert) + ", " + "ml")
-        if (meausure == "kg"):
-                convert = round(massunits.MassUnit(int(quantity), 'gal', 'l').doconvert(), 2)
+        if (meausure == "gal"):
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'gal', 'l').doconvert(), 2)
                 return (str(convert) + ", " + "l")
-        if (meausure == "tsp"):
-                convert = round(volumeunits.VolumeUnit(int(quantity), 'oz', 'g').doconvert(), 2)
+        if (meausure == "oz"):
+                convert = round(massunits.MassUnit(int(quantity), 'oz', 'g').doconvert(), 2)
                 print(convert)
                 return (str(convert) + ", " + "g")
-        if (meausure == "l"):
-                convert = round(volumeunits.VolumeUnit(int(quantity), 'lb', 'kg').doconvert(), 2)
+        if (meausure == "lb"):
+                convert = round(massunits.MassUnit(int(quantity), 'lb', 'kg').doconvert(), 2)
                 print(convert)
                 return (str(convert) + ", " + "kg")
         if (meausure == "None"):

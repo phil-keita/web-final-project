@@ -65,9 +65,19 @@
         <h2>
             Ingredients Needed:
         </h2>
-        <p>
-            {{post.ingredients}}
-        </p>
+        <ul>
+            {% set inglist = (post.ingredients).split('\n') %}
+            {% for i in range((inglist|length)-1) %}
+                <li>{{inglist[i]}}</li>
+            {% endfor %}
+        </ul>
+        <h6>OR</h6>
+        <ul>
+            {% set convlist = (post.converted_ingredients).split('\n') %}
+            {% for i in range((convlist|length)-1) %}
+                <li>{{convlist[i]}}</li>
+            {% endfor %}
+        </ul>
         <hr>
         <h2>
             Instructions:
