@@ -352,7 +352,9 @@ def explore_page(postid=0):
 def add_new_comment(postid):
     # THIS IS WHERE THE JS WILL SEND A POST TO ADD A NEW COMMENT
     get_commentjson = request.get_json()
-    # print(get_commentjson)
+    if ((get_commentjson.get("rating")==None) or (get_commentjson.get("text"))==None):
+        flash("Comment was not filled out completely.")
+        return "Comment had empty parameter", 403
     new_comment = Comment(post_id=postid, text=get_commentjson.get("text"), rating=int(get_commentjson.get("rating")), user_id=session.get("userid"))
     db.session.add(new_comment)
     db.session.commit()
