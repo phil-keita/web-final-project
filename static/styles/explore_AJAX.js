@@ -42,9 +42,9 @@ function insertPost(post){
     const postContainer = document.getElementById("allpost-feed");
     //card
     const card = document.createElement('div');
-    card.setAttribute("class", "card pb-2");
+    card.setAttribute("class", "card pb-5");
     card.setAttribute("id", "post");
-    postContainer.append(card, document.createElement("br"));
+    postContainer.append(card);
     
     
     //header
@@ -100,10 +100,15 @@ function insertPost(post){
     ingredientParagraph.setAttribute("class", "card-text");
     ingredientParagraph.innerText = post.ingredients;
     cardBody.append(ingredientParagraph);
+
+    const stepsTitle = document.createElement("h6");
+    stepsTitle.setAttribute('class', 'card-title');
+    stepsTitle.innerText = "Steps";
+    cardBody.append(stepsTitle);
     const stepsParagraph = document.createElement("p");
     stepsParagraph.setAttribute("class", "card-text");
     stepsParagraph.innerText = post.recipe;
-    cardBody.append(stepsParagraph, document.createElement("br"));
+    cardBody.append(stepsParagraph);
 }
 
 function searchBarResponse() {
