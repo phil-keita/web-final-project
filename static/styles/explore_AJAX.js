@@ -104,8 +104,6 @@ function insertPost(post){
     stepsParagraph.setAttribute("class", "card-text");
     stepsParagraph.innerText = post.recipe;
     cardBody.append(stepsParagraph, document.createElement("br"));
-
-    
 }
 
 function searchBarResponse() {

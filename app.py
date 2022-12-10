@@ -274,10 +274,6 @@ def post_post():
             converted = (convert_units("Imperial", quantity, measure))
         ingredients += str(name) + ", " + str(quantity) + ", " + str(measure) + "\n"
         converted_ingredients += str(name) + ", " + str(converted) + "\n"
-        
-    
-    
-
 
     new_post = Post(post_name=post_name, user_id = user_id, units=units, ingredients=ingredients, converted_ingredients=converted_ingredients, recipe=recipe)
     db.session.add(new_post)
@@ -292,19 +288,28 @@ def user_profile():
 
 @app.route("/profile/<int:userid>/")
 def profile_view(userid):  # VIEWING A PERSON'S PROFILE PAGE WITH ALL OF THEIR RECIPE POSTS
+    logged_in = False
+    if 'userid' in session.keys():
+        logged_in = True
     profile_user = User.query.filter_by(id=userid).first()
-    return render_template("profile.html", user=profile_user)
+    return render_template("profile.html", user=profile_user, logged_in=logged_in)
 
 @app.route("/profile/<int:userid>/posts/")  # VIEWING ALL POSTS OF THE USER
 def profile_posts(userid):
+    logged_in = False
+    if 'userid' in session.keys():
+        logged_in = True
     profile_user = User.query.filter_by(id=userid).first()
     posts = Post.query.filter_by(user_id=userid).all()
-    return render_template("allposts.html", user=profile_user, posts=posts)
+    return render_template("allposts.html", user=profile_user, posts=posts, logged_in=logged_in)
 
 @app.route("/profile/<int:userid>/comments/") # VIEWING ALL COMMENTS OF THE USER
 def profile_comments(userid):
+    logged_in = False
+    if 'userid' in session.keys():
+        logged_in = True
     profile_user = User.query.filter_by(id=userid).first()
-    return render_template("allcomments.html", user=profile_user)
+    return render_template("allcomments.html", user=profile_user, logged_in=logged_in)
 
 @app.route("/profile/<int:userid>/jsondump/") # JSON FOR AJAX
 def user_json_dump(userid):
