@@ -166,3 +166,9 @@ hr{
     background-color: var(--accent-color);
     border: none;
 }
+
+.comment-adders {
+    background-color: var(--main-color);
+    border-color: var(--accent-color);
+    vertical-align: middle;
+}
