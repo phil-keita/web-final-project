@@ -73,7 +73,7 @@ function insertPost(post) {
 
     //Image
     const image = document.createElement('img');
-    image.setAttribute("src", "/static/styles/images/lasagna.jpg");
+    image.setAttribute("src", "/static/styles/images/new_recipes.jpg");
     image.setAttribute("id", "carousel");
     image.setAttribute("class", "d-block pt-3");
     card.append(image);
