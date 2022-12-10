@@ -83,10 +83,14 @@ function insertPost(post){
     cardBody.setAttribute('id', 'post-content');
     card.append(cardBody);
     //Title
-    const title = document.createElement('h5');
-    title.setAttribute('class', 'card-title');
+    const titlehead = document.createElement('h5');
+    const title = document.createElement("a");
+    titlehead.setAttribute('class', 'card-title');
     title.innerText = post.post_name;
-    cardBody.append(title, document.createElement("hr"));
+    title.setAttribute("href", `/explore/${post.id}/`);
+    title.setAttribute("class", "username");
+    titlehead.appendChild(title);
+    cardBody.append(titlehead, document.createElement("hr"));
     //Ingredients
     const ingredientTitle = document.createElement("h6");
     ingredientTitle.setAttribute('class', 'card-title');
