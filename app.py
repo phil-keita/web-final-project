@@ -6,9 +6,6 @@ from sqlalchemy import desc
 from flask_login import login_required, login_user, LoginManager, logout_user, UserMixin, current_user
 import os
 from unitconvert import volumeunits, massunits
-
-
-
 from userform import Login_form, Register_Form, Post_Form, Comment_Form, PrePostForm, IngrediantForm
 
 app = Flask(__name__)
@@ -60,6 +57,7 @@ class Post(db.Model):
             "post_name": self.post_name,
             "user_id": self.user_id,
             "ingredients": self.ingredients,
+            "converted_ingredients": self.converted_ingredients,
             "recipe": self.recipe,
             # "numlikes": self.numlikes,
             "userinfo": User.query.get(self.user_id).tojson(),
@@ -162,8 +160,11 @@ def post_register(): #TODO: REGISTER PAGE
 @app.get("/ingredients/")
 @login_required
 def get_pre_post():
+    logged_in = False
+    if 'userid' in session.keys():
+        logged_in = True
     form = PrePostForm()
-    return render_template("prepost.html", form=form)
+    return render_template("prepost.html", form=form, logged_in=logged_in)
 
 
 @app.post("/ingredients/")
@@ -187,6 +188,9 @@ def post_pre_post():
 @app.get("/post/")
 @login_required
 def get_post():
+    logged_in = False
+    if 'userid' in session.keys():
+        logged_in = True
     if(session['is_submitted'] == "True"):
         session['is_submitted'] = "False"
         form = Post_Form()
@@ -212,9 +216,6 @@ def get_post():
             m_units.append(ingredient.m_units.name)
             im_units.append(ingredient.im_units.name)
 
-
-
-
     # Try this, maybe?
         form.ingredients = fields
         form.units = u_fields
@@ -225,7 +226,7 @@ def get_post():
 
     # if (pre_form.is_submitted() == False):
         # return redirect(url_for("get_pre_post"))
-        return render_template("post.html", form=form, num=num, units=units, ingredient=ingredient)
+        return render_template("post.html", form=form, num=num, units=units, ingredient=ingredient, logged_in=logged_in)
     else:
         return redirect(url_for("get_pre_post"))
     
@@ -274,10 +275,6 @@ def post_post():
             converted = (convert_units("Imperial", quantity, measure))
         ingredients += str(name) + ", " + str(quantity) + ", " + str(measure) + "\n"
         converted_ingredients += str(name) + ", " + str(converted) + "\n"
-        
-    
-    
-
 
     new_post = Post(post_name=post_name, user_id = user_id, units=units, ingredients=ingredients, converted_ingredients=converted_ingredients, recipe=recipe)
     db.session.add(new_post)
@@ -292,19 +289,28 @@ def user_profile():
 
 @app.route("/profile/<int:userid>/")
 def profile_view(userid):  # VIEWING A PERSON'S PROFILE PAGE WITH ALL OF THEIR RECIPE POSTS
+    logged_in = False
+    if 'userid' in session.keys():
+        logged_in = True
     profile_user = User.query.filter_by(id=userid).first()
-    return render_template("profile.html", user=profile_user)
+    return render_template("profile.html", user=profile_user, logged_in=logged_in)
 
 @app.route("/profile/<int:userid>/posts/")  # VIEWING ALL POSTS OF THE USER
 def profile_posts(userid):
+    logged_in = False
+    if 'userid' in session.keys():
+        logged_in = True
     profile_user = User.query.filter_by(id=userid).first()
     posts = Post.query.filter_by(user_id=userid).all()
-    return render_template("allposts.html", user=profile_user, posts=posts)
+    return render_template("allposts.html", user=profile_user, posts=posts, logged_in=logged_in)
 
 @app.route("/profile/<int:userid>/comments/") # VIEWING ALL COMMENTS OF THE USER
 def profile_comments(userid):
+    logged_in = False
+    if 'userid' in session.keys():
+        logged_in = True
     profile_user = User.query.filter_by(id=userid).first()
-    return render_template("allcomments.html", user=profile_user)
+    return render_template("allcomments.html", user=profile_user, logged_in=logged_in)
 
 @app.route("/profile/<int:userid>/jsondump/") # JSON FOR AJAX
 def user_json_dump(userid):
@@ -347,7 +353,9 @@ def explore_page(postid=0):
 def add_new_comment(postid):
     # THIS IS WHERE THE JS WILL SEND A POST TO ADD A NEW COMMENT
     get_commentjson = request.get_json()
-    # print(get_commentjson)
+    if ((get_commentjson.get("rating")==None) or (get_commentjson.get("text"))==None):
+        flash("Comment was not filled out completely.")
+        return "Comment had empty parameter", 403
     new_comment = Comment(post_id=postid, text=get_commentjson.get("text"), rating=int(get_commentjson.get("rating")), user_id=session.get("userid"))
     db.session.add(new_comment)
     db.session.commit()
@@ -399,25 +407,25 @@ def convert_units(units, quantity, meausure):
                 convert = round(volumeunits.VolumeUnit(int(quantity), 'tsp', 'ml').doconvert(), 2)
                 print(convert)
                 return (str(convert) + ", " + "ml")
-        if (meausure == "l"):
+        if (meausure == "tbsp"):
                 convert = round(volumeunits.VolumeUnit(int(quantity), 'tbsp', 'ml').doconvert(), 2)
                 print(convert)
                 return (str(convert) + ", " + "ml")
         if (meausure == "mg"):
-                convert = round(volumeunits.VolumeUnit(int(quantity), 'floz', 'ml').doconvert(), 2)
+                convert = round(massunits.MassUnit(int(quantity), 'floz', 'ml').doconvert(), 2)
                 return (str(convert) + ", " + "ml")
         if (meausure == "g"): 
-                convert = round(volumeunits.VolumeUnit(int(quantity), 'cup', 'ml').doconvert(), 2)
+                convert = round(massunits.MassUnit(int(quantity), 'cup', 'ml').doconvert(), 2)
                 return (str(convert) + ", " + "ml")
         if (meausure == "kg"):
-                convert = round(volumeunits.VolumeUnit(int(quantity), 'gal', 'l').doconvert(), 2)
+                convert = round(massunits.MassUnit(int(quantity), 'gal', 'l').doconvert(), 2)
                 return (str(convert) + ", " + "l")
         if (meausure == "tsp"):
-                convert = round(massunits.MassUnit(int(quantity), 'oz', 'g').doconvert(), 2)
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'oz', 'g').doconvert(), 2)
                 print(convert)
                 return (str(convert) + ", " + "g")
         if (meausure == "l"):
-                convert = round(massunits.MassUnit(int(quantity), 'lb', 'kg').doconvert(), 2)
+                convert = round(volumeunits.VolumeUnit(int(quantity), 'lb', 'kg').doconvert(), 2)
                 print(convert)
                 return (str(convert) + ", " + "kg")
         if (meausure == "None"):

@@ -6,27 +6,67 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function loadPostPreview() {
     const userid = document.getElementById("usernum").getAttribute("data")
     const infoDir = `/profile/${userid}/jsondump/`;
-    const postDiv = document.getElementById("post-div");
 
     fetch(infoDir)
         .then(validateJSON)
         .then(data => {
-            for (let i=0; i<4; i++) {
+            for (let i = 0; i < 4; i++) {
                 if (!(typeof data.posts[i] == "undefined")) {
-                    const hr = document.createElement("hr");
-                    const title = document.createElement("h2");
-                    title.innerText = `${data.posts[i].post_name}`;
-                
-                    const preview = document.createElement("p");
-                    const text = `${data.posts[i].recipe}`.substring(0,50) + "...";
-                    preview.innerText = text;
-                    postDiv.append(hr, title, preview);
+
+                    const username = document.getElementById("user");
+                    username.innerText = document.getElementById("title").innerText;
+                    const img = document.createElement("img");
+                    img.setAttribute('id', "profile-pic");
+                    img.setAttribute("src", "/static/styles/images/chef_profile_pic.jpg");
+                    username.append(img);
+
+
+                    const postContainer = document.getElementById("post-div");
+                    //card
+                    const card = document.createElement('div');
+                    card.setAttribute("class", "card pb-2");
+                    card.setAttribute("id", "post");
+                    postContainer.append(card, document.createElement("br"));
+
+                    //header
+                    const header = document.createElement('div');
+                    header.setAttribute('class', "row pt-3");
+                    header.setAttribute('style', "margin-left: 5px;");
+                    card.append(header);
+
+                    //Card Body
+                    const cardBody = document.createElement("div");
+                    cardBody.setAttribute('class', 'card-body');
+                    cardBody.setAttribute('id', 'post-content');
+                    card.append(cardBody);
+
+                    //Title
+                    const titlehead = document.createElement('h5');
+                    const title = document.createElement("a");
+                    titlehead.setAttribute('class', 'card-title');
+                    title.innerText = data.posts[i].post_name;
+                    title.setAttribute("href", `/explore/${data.posts[i].id}/`);
+                    title.setAttribute("class", "username");
+                    titlehead.appendChild(title);
+                    cardBody.append(titlehead, document.createElement("hr"));
+
+                    //Ingredients
+                    const ingredientTitle = document.createElement("h6");
+                    ingredientTitle.setAttribute('class', 'card-title');
+                    ingredientTitle.innerText = "ingredients";
+                    cardBody.append(ingredientTitle);
+                    const ingredientParagraph = document.createElement("p");
+                    ingredientParagraph.setAttribute("class", "card-text");
+                    ingredientParagraph.innerText = data.posts[i].ingredients;
+                    cardBody.append(ingredientParagraph);
+                    const stepsParagraph = document.createElement("p");
+                    stepsParagraph.setAttribute("class", "card-text");
+                    stepsParagraph.innerText = data.posts[i].recipe;
+                    cardBody.append(stepsParagraph, document.createElement("br"));
                 }
             }
-            const hr = document.createElement("hr");
-            postDiv.appendChild(hr);
         })
-        .catch(error => {console.log(`Error occurred: ${error}`)})
+        .catch(error => { console.log(`Error occurred: ${error}`) })
 }
 
 async function loadCommentPreview() {
@@ -37,25 +77,60 @@ async function loadCommentPreview() {
     fetch(infoDir)
         .then(validateJSON)
         .then(data => {
-            for (let i=0; i<4; i++) {
+            for (let i = 0; i < 4; i++) {
                 if (!(typeof data.comments[i] == "undefined")) {
-                    const hr = document.createElement("hr");
-                    const title = document.createElement("h2");
-                    title.innerText = `${data.comments[i].postinfo.post_name}`;
-                
-                    const preview = document.createElement("p");
-                    const text = `${data.comments[i].text}`.substring(1,50) + "...";
-                    preview.innerText = text;
-        
+                    const postContainer = document.getElementById("comment-div");
+
+                    //card
+                    const card = document.createElement('div');
+                    card.setAttribute("class", "card pb-2");
+                    card.setAttribute("id", "post");
+                    postContainer.append(card, document.createElement("br"));
+
+                    //header
+                    const header = document.createElement('div');
+                    header.setAttribute('class', "row pt-3");
+                    header.setAttribute('style', "margin-left: 5px;");
+                    card.append(header);
+
+                    //Card Body
+                    const cardBody = document.createElement("div");
+                    cardBody.setAttribute('class', 'card-body');
+                    cardBody.setAttribute('id', 'post-content');
+                    card.append(cardBody);
+
+                    //Title of the post
+                    const titlehead = document.createElement('h5');
+                    const title = document.createElement("a");
+                    titlehead.setAttribute('class', 'card-title');
+                    title.innerText = data.comments[i].postinfo.post_name + " by " + data.comments[i].postinfo.userinfo.username;
+                    title.setAttribute("href", `/explore/${data.comments[i].postinfo.id}/`);
+                    title.setAttribute("class", "username");
+                    titlehead.appendChild(title);
+                    cardBody.append(titlehead, document.createElement("hr"));
+
+                    //Text
+                    const commParagraph = document.createElement("p");
+                    commParagraph.setAttribute("class", "card-text");
+                    if (data.comments[i].text.length > 50) {
+                        commParagraph.innerText = data.comments[i].text.slice(0, 50) + "...";
+                    }
+                    else {
+                        commParagraph.innerText = data.comments[i].text;
+                    }
+                    cardBody.append(commParagraph, document.createElement("br"));
+
+                    //Rating
                     const rating = document.createElement("p");
-                    rating.innerText = `${data.comments[i].rating}`;
-                    commentDiv.append(hr, title, preview, rating);
+                    rating.setAttribute("class", "card-text");
+                    rating.innerText = "Voted " + data.comments[i].rating + " Stars";
+                    cardBody.append(rating, document.createElement("br"));
                 }
             }
             const hr = document.createElement("hr");
             commentDiv.appendChild(hr);
         })
-        .catch(error => {console.log(`Error occurred: ${error}`)})
+        .catch(error => { console.log(`Error occurred: ${error}`) })
 }
 
 function validateJSON(response) {

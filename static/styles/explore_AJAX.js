@@ -30,23 +30,23 @@ async function loadPosts() {
                 card.setAttribute("id", "post");
                 postContainer.append(card, document.createElement("br"));
             }
-                //Insert each post's info here
-                //insertElement is the div which each post will be added (I gave it a unique ID)
-                //Make sure to put the title, username, rating, and a sample of the recipe in the AJAX preview
-                //Have it so clicking on the post preview will link to /explore/<post_id>/ (Ask me if you have trouble)
+            //Insert each post's info here
+            //insertElement is the div which each post will be added (I gave it a unique ID)
+            //Make sure to put the title, username, rating, and a sample of the recipe in the AJAX preview
+            //Have it so clicking on the post preview will link to /explore/<post_id>/ (Ask me if you have trouble)
         })
-        .catch(error => {console.log(`Error occurred - ${error}`)})
+        .catch(error => { console.log(`Error occurred - ${error}`) })
 }
 
-function insertPost(post){
+function insertPost(post) {
     const postContainer = document.getElementById("allpost-feed");
     //card
     const card = document.createElement('div');
     card.setAttribute("class", "card pb-5");
     card.setAttribute("id", "post");
     postContainer.append(card);
-    
-    
+
+
     //header
     const header = document.createElement('div');
     header.setAttribute('class', "row pt-3");
@@ -54,25 +54,26 @@ function insertPost(post){
     card.append(header);
     //profile pic
     const profileDiv = document.createElement("div");
-    profileDiv.setAttribute('class',"col-1");
+    profileDiv.setAttribute('class', "col-1");
     header.append(profileDiv);
     const img = document.createElement("img");
-    img.setAttribute('id',"profile-pic");
-    img.setAttribute("src", "/static/styles/images/profile_pic.jpg");
+    img.setAttribute('id', "profile-pic");
+    img.setAttribute("src", "/static/styles/images/chef_profile_pic.jpg");
     profileDiv.append(img);
+
     //username display
     const usernameDiv = document.createElement("div");
-    usernameDiv.setAttribute('class','col pt-2');
+    usernameDiv.setAttribute('class', 'col pt-2');
     header.append(usernameDiv);
     const link = document.createElement('a');
     link.setAttribute('href', `/profile/${post.user_id}/`);
     link.setAttribute('class', "username");
     link.innerHTML = post.userinfo.username;
     usernameDiv.append(link);
-    
+
     //Image
     const image = document.createElement('img');
-    image.setAttribute("src", "/static/styles/images/lasagna.jpg");
+    image.setAttribute("src", "/static/styles/images/new_recipes.jpg");
     image.setAttribute("id", "carousel");
     image.setAttribute("class", "d-block pt-3");
     card.append(image);
@@ -82,6 +83,7 @@ function insertPost(post){
     cardBody.setAttribute('class', 'card-body');
     cardBody.setAttribute('id', 'post-content');
     card.append(cardBody);
+
     //Title
     const titlehead = document.createElement('h5');
     const title = document.createElement("a");
@@ -90,7 +92,10 @@ function insertPost(post){
     title.setAttribute("href", `/explore/${post.id}/`);
     title.setAttribute("class", "username");
     titlehead.appendChild(title);
-    cardBody.append(titlehead, document.createElement("hr"));
+    const postRating = document.createElement("h6");
+    postRating.innerText = post.rating + " Stars";
+    cardBody.append(titlehead, document.createElement("hr"), postRating, document.createElement("hr"));
+
     //Ingredients
     const ingredientTitle = document.createElement("h6");
     ingredientTitle.setAttribute('class', 'card-title');

@@ -5,26 +5,77 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <a href="#" id="post-id" postid="{{post.id}}"></a>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
+    integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
+    crossorigin="anonymous"></script>
+    <link href="/static/styles/style.css" rel="stylesheet">
     <script src="/static/styles/add_new_comment.js"></script>
     <title>"{{post.post_name}}" by {{user.username}}</title>
 </head>
 <body>
+    <div class="container-fluid p-5" id="main-container">
+        <!-- Menu Bar -->
+        <nav class="navbar fixed-top navbar-expand-lg" id="menu-bar">
+          <div class="container-fluid">
+            Cook-Look | 
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link" href="/">Home</a>
+                </li>
+                {% if logbool == True %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/ingredients/">Create Recipe</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/profile/">Profile</a>
+                </li>
+              </ul>
+            </div>
+            <a class="nav-link" href="/logout/">Logout</a>
+            {% else %}
+            </ul>
+          </div>
+          <a class="nav-link" href="/login/">Login/Register</a>
+        </div>
+        {% endif %}
+    </nav>
     <div id="title-div">
-        <h2>{{post.post_name}}</h2>
-        <h4>by {{user.username}}</h4>
-        <h4>{{"%.1f"|format(post.rating)}} Stars - {{post.numcomments}} Comments - {{post.numlikes}} Likes</h4>  
+        <div class="row pt-4">
+            <div class="col">
+                <h1>
+                    {{post.post_name}}   
+                </h1>
+                <h5>by {{user.username}}</h5>
+                <h5>{{"%.1f"|format(post.rating)}} Stars - {{post.numcomments}} Comments</h5>  
+            </div>
+        </div>
     </div>
     <hr>
     <div>
         <h2>
             Ingredients Needed:
         </h2>
-        {% set ingredient_list = post.ingredients.split("\n") %}
         <ul>
-            {% for i in range(0, (ingredient_list|length)-1) %}
-            <li>
-                {{ingredient_list[i]}}
-            </li>
+            {% set inglist = (post.ingredients).split('\n') %}
+            {% for i in range((inglist|length)-1) %}
+                <li>{{inglist[i]}}</li>
+            {% endfor %}
+        </ul>
+        <h6>OR</h6>
+        <ul>
+            {% set convlist = (post.converted_ingredients).split('\n') %}
+            {% for i in range((convlist|length)-1) %}
+                <li>{{convlist[i]}}</li>
             {% endfor %}
         </ul>
         <hr>
@@ -37,15 +88,27 @@
         <hr>
     </div>
     <!-- ADD A WAY TO COMMENT AND RATE THE POST HERE -->
-    {% if logbool==true %}
-    <div id="add-new-comments">
-        <input type="text" size="50" id="comment-value">
-        <input type="number" id="rating-value" min="1" max="5">
-        <input type="button" id="add-button" value="Add Comment">
+    {% if logbool == True %}
+    <br>
+    <div id="add-new-comments" class="col-9 px-5">
+        <input type="text" size="50" id="comment-value" placeholder="Comment Text" class="col-6 comment-adders form-control rounded-left"
+        aria-label="Search" aria-describedby="search-addon" />
     </div>
+    <div id="rating" class="col-3 px-5">
+        <input type="number" id="rating-value" min="1" max="5" placeholder="Rating" class="comment-adders form-control rounded-left"
+        aria-label="Search" aria-describedby="search-addon" />
+    </div>
+    <div id="new-comm-button" class="col-4 px-5">
+        <input type="button" id="button" class="btn btn-outline-primary rounded-right" value="Add Comment">
+    </div>
+    <br>
     {% endif %}
     <div id="comment-section">
-
+        <div>
+            <h3>
+                Comments:
+            </h3>
+        </div>
     </div>
 </body>
 </html>

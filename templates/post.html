@@ -21,7 +21,7 @@
     <div class="container-fluid" id="main-container" style="padding-top: 100px;">
         <nav class="navbar fixed-top navbar-expand-lg" id="menu-bar">
             <div class="container-fluid">
-                WeNeedAName
+                Cook-Look |
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -31,20 +31,23 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" href="/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/ingredients/">Create recipe</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Saved Recipes</a>
-                        </li>
-                        <li class="nav-item">
+                          </li>
+                          {% if logged_in == True %}
+                          <li class="nav-item">
+                            <a class="nav-link" href="/ingredients/">Create Recipe</a>
+                          </li>
+                          <li class="nav-item">
                             <a class="nav-link" href="/profile/">Profile</a>
-                        </li>
-                    </ul>
-                </div>
-                <a class="nav-link" href="/logout/">logout</a>
-            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <a class="nav-link" href="/logout/">Logout</a>
+                      {% else %}
+                      </ul>
+                    </div>
+                    <a class="nav-link" href="/login/">Login/Register</a>
+                  </div>
+                  {% endif %}
         </nav>
         <div class="container">
             <div class="container">
@@ -74,17 +77,22 @@
                     <div class="col">
                         <div class="card" id="post-form">
                             {% if units == "Imperial" %}
-                            <div class="row pt-2">
+                            <div class="row">
                                 <h2>Ingredients</h2>
                                 {% for entry in form.ingredients %}
+                                <div class="row pt-2 pb-2">
                                 {{entry.name.label}}
                                 {{entry.name(class="form-control", id="input", style="width: 90%;")}}
-
+                                </div>
+                                <div class="row pt-2 pb-2">
                                 {{entry.quantity.label(class="form-label")}}
                                 {{entry.quantity(class="form-control", id="input", style="width: 100px;")}}
-
+                                </div>
+                                <div class="row pt-2 pb-2">
                                 {{entry.im_units.label(class="form-label")}}
                                 {{entry.im_units(class="btn btn-secondary dropdown-toggle", style="width: 150px;")}}
+                                </div>
+                                <hr>
                                 {% endfor %}
                             </div>
                             {% endif %}

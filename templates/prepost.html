@@ -21,7 +21,7 @@
     <div class="container-fluid" id="main-container" style="padding-top: 100px; height: 100vh;">
         <nav class="navbar fixed-top navbar-expand-lg" id="menu-bar">
             <div class="container-fluid">
-                WeNeedAName
+                Cook-Look | 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -31,20 +31,23 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" href="/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/ingredients/">create recipe</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Saved Recipes</a>
-                        </li>
-                        <li class="nav-item">
+                          </li>
+                          {% if logged_in == True %}
+                          <li class="nav-item">
+                            <a class="nav-link" href="/ingredients/">Create Recipe</a>
+                          </li>
+                          <li class="nav-item">
                             <a class="nav-link" href="/profile/">Profile</a>
-                        </li>
-                    </ul>
-                </div>
-                <a class="nav-link" href="/logout/">logout</a>
-            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <a class="nav-link" href="/logout/">Logout</a>
+                      {% else %}
+                      </ul>
+                    </div>
+                    <a class="nav-link" href="/login/">Login/Register</a>
+                  </div>
+                  {% endif %}
         </nav>
         <h5>How many ingredients will we be using for this recipe?</h5>
         <div class="container">
